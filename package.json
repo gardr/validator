@@ -1,0 +1,21 @@
+{
+  "name": "validator",
+  "version": "0.0.1",
+  "scripts": {
+    "test": "grunt mochaTest"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/pasties/validator"
+  },
+  "dependencies": {
+    "optimist": "0.6.0"
+  },
+  "devDependencies": {
+    "grunt": "~0.4.1",
+    "grunt-cli": "~0.1.9",
+    "grunt-mocha-test": "~0.7.x",
+    "mocha": "~1.13.0",
+    "chai": "~1.8.0"
+  }
+}
