@@ -1,3 +1,4 @@
+var path = require('path');
 var buster = require('buster-assertions');
 var assert = buster.assert;
 var refute = buster.refute;
@@ -6,7 +7,8 @@ var proxyquire = require('proxyquire');
 
 var runner = proxyquire('../../lib/runner.js', {
     './spawn.js': function (options, handler, done) {
-        handler('{}', done);
+        var result = JSON.stringify({har: {}, clientHar: {}, probes: {}});
+        handler(result, done);
     }
 });
 
@@ -27,8 +29,19 @@ describe('Validation runner (phantomJs)', function () {
             pageUrl: null,
             spec: {}
         }, function (err, reportObj) {
-            assert(err instanceof Error);
-            refute.isNull(reportObj);
+            assert(err);
+            refute(reportObj);
+            done();
+        });
+    });
+
+    it('should not accept an spec object with missing hooks or validators', function (done) {
+        runner.run({
+            pageUrl: 'valid',
+            spec: { notValid: true }
+        }, function (err, reportObj) {
+            assert(err, 'Expected a error');
+            refute(reportObj);
             done();
         });
     });
@@ -38,22 +51,44 @@ describe('Validation runner (phantomJs)', function () {
             pageUrl: 'about:blank',
             spec: {}
         }, function (err, reportObj) {
-            refute.isNull(reportObj);
+            assert.isNull(err);
+            assert.isObject(reportObj);
             done();
         });
     });
 
-    it('should create a spec file array', function () {
+    it('should create a spec file path array', function () {
         var files = runner.collectSpec({
-            timers: {
-                callsPrSec: 10
-            },
-            latestJQuery: {
-                allowLegacy: true
-            }
+            timers: true,
+            latestJQuery: true
         });
 
         assert.equals(files.length, 2);
+    });
+
+    it('should create a validator file path array', function(){
+        var files = runner.collectValidator({
+            timers: true,
+            latestJQuery: true
+        });
+
+        assert.equals(files.length, 2);
+    });
+
+    it('should return error on missing hook or validator files', function(done){
+        runner.statFiles(['invalid','invalid2'], function(err){
+            assert(err);
+            done();
+        });
+    });
+
+    it('should not throw a error if a valid list of files', function(done){
+        var currentFile = path.join(__dirname, 'runner.test.js');
+        runner.statFiles([currentFile, currentFile, currentFile], function(err){
+            refute(err);
+            done();
+        });
+
     });
 
     describe('handleResult', function () {

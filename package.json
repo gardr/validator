@@ -10,7 +10,8 @@
   },
   "dependencies": {
     "phantomjs": "~1.9.2-2",
-    "shellout": "0.0.1"
+    "shellout": "0.0.1",
+    "async": "~0.2.9"
   },
   "devDependencies": {
     "mocha": "~1.13.0",
