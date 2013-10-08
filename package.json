@@ -2,21 +2,19 @@
   "name": "validator",
   "version": "0.0.1",
   "scripts": {
-    "test": "grunt mochaTest"
+    "test": "./node_modules/.bin/mocha test/**/*.test.js"
   },
   "repository": {
     "type": "git",
     "url": "https://github.com/pasties/validator"
   },
   "dependencies": {
-    "optimist": "0.6.0"
+    "phantomjs": "~1.9.2-2",
+    "shellout": "0.0.1"
   },
   "devDependencies": {
-    "grunt": "~0.4.1",
-    "grunt-cli": "~0.1.9",
-    "grunt-contrib-watch": "0.5.3",
-    "grunt-mocha-test": "~0.7.x",
     "mocha": "~1.13.0",
-    "chai": "~1.8.0"
+    "proxyquire": "~0.5.1",
+    "buster-assertions": "~0.10.4"
   }
 }

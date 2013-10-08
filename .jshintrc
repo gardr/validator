@@ -1,8 +1,6 @@
 {
     "globals": {
         "jQuery"    : false,
-        "$"         : false,
-        "jasmine"   : false,
         "describe"  : false,
         "it"        : false,
         "expect"    : false,
@@ -62,7 +60,7 @@
     "supernew"      : false,
     "validthis"     : false,
 
-    
+
     "browser"       : true,
     "devel"         : false,
     "node"          : true
