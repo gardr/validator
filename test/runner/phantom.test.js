@@ -47,7 +47,7 @@ describe('phantom', function () {
             var options = {
                 files: [fixture]
             };
-            createHooks.init(page, options);
+            createHooks(page, options);
 
             assert.equals(expectedLength, Object.keys(page).length);
         });
@@ -76,15 +76,22 @@ describe('phantom', function () {
             };
 
             times = options.files.length;
-            createHooks.init(page, options, api);
+            createHooks(page, options, api);
 
             page.onBeforeExit.call(page, arg1, arg2);
-
         });
 
-        it.skip('is ok', function(){
-            assert(true);
-            refute(false);
+        it('isCustom should only return if key is custom key', function(){
+            refute(createHooks.isCustom('onLoadStarted'));
+            assert(createHooks.isCustom('onBeforeExit'));
+        });
+
+        it('should should trigger only custom functions', function(done){
+            var page = {};
+            var options = {files: [{onBeforeExit: done}]};
+            var trigger = createHooks(page, options);
+
+            trigger('onBeforeExit');
         });
     });
 });
