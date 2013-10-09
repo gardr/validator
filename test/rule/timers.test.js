@@ -4,7 +4,7 @@ var refute = buster.refute;
 
 var timers = require('../../lib/rule/validator/timers.js');
 var hooks  = require('../../lib/rule/hook/timers.js');
-var rule   = require('../../lib/rule.js');
+var HOOKS = require('../../lib/phantom/createHooks.js').HOOKS;
 
 function getTraceObject() {
     return {
@@ -22,7 +22,7 @@ describe('timers hooks', function(){
 
     it('should only use hooks that exist', function(){
         Object.keys(hooks).forEach(function(hookKey){
-            assert(rule.HOOKS.indexOf(hookKey) !== -1, hookKey + ' is not Valid');
+            assert(HOOKS.indexOf(hookKey) !== -1, hookKey + ' is not Valid');
         });
     });
 

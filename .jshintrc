@@ -1,5 +1,5 @@
 {
-    "globals": {        
+    "globals": {
         "describe"  : false,
         "it"        : false,
         "expect"    : false,
@@ -7,7 +7,9 @@
         "runs"      : false,
         "beforeEach": false,
         "afterEach" : false,
-        "spyOn"     : false
+        "spyOn"     : false,
+        "phantom"   : false,
+        "system"    : false
     },
 
     "bitwise"       : true,
@@ -59,7 +61,7 @@
     "supernew"      : false,
     "validthis"     : false,
 
-    
+
     "browser"       : true,
     "devel"         : false,
     "node"          : true
