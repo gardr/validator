@@ -20,7 +20,7 @@ var runner = proxyquire('../../lib/runner.js', {
 
 describe('Validation runner (phantomJs)', function () {
 
-    it('should not accept missing spec', function (done) {
+    it('should require a spec', function (done) {
         runner.run({
             pageUrl: 'about:blank',
             spec: null
@@ -30,7 +30,7 @@ describe('Validation runner (phantomJs)', function () {
         });
     });
 
-    it('should not accept an object without pageUrl', function (done) {
+    it('should require an object without a pageUrl', function (done) {
         runner.run({
             pageUrl: null,
             spec: {}
@@ -41,7 +41,7 @@ describe('Validation runner (phantomJs)', function () {
         });
     });
 
-    it('should not accept an spec object with missing hooks or validators', function (done) {
+    it('should require a spec object with hooks or validators', function (done) {
         runner.run({
             pageUrl: 'valid',
             spec: {
@@ -55,6 +55,7 @@ describe('Validation runner (phantomJs)', function () {
     });
 
     it('should call spawn when options are valid', function (done) {
+        // The description does not match the test, spawn is an internal unknown to runner
         runner.run({
             pageUrl: 'about:blank',
             spec: {}
@@ -67,6 +68,7 @@ describe('Validation runner (phantomJs)', function () {
 
 
     it('should create a spec file path array', function () {
+        // the api says that runner should provide a function to retrieve a spec, not reflected in the test description
         var files = runner.collectSpec({
             timers: true,
             latestJQuery: true
@@ -76,6 +78,7 @@ describe('Validation runner (phantomJs)', function () {
     });
 
     it('should create a validator file path array', function () {
+        // should provide a list of validator result files
         var files = runner.collectValidator({
             timers: true,
             latestJQuery: true
@@ -85,6 +88,7 @@ describe('Validation runner (phantomJs)', function () {
     });
 
     it('should return error on missing hook or validator files', function (done) {
+        // this feature is for retrieval of stat files, not mentioned in the description
         runner.statFiles(['invalid', 'invalid2'], function (err) {
             assert(err);
             done();
@@ -101,7 +105,7 @@ describe('Validation runner (phantomJs)', function () {
     });
 
     describe('handleResult', function () {
-        it('should parse invalid json result from runner as error', function (done) {
+        it('should return an error when parsing invalid json result', function (done) {
             var strInput1 = 'ssomeasdøasldøsad';
             runner.handleResult(strInput1, function (err, dataObj) {
                 assert.isObject(err);
@@ -111,6 +115,7 @@ describe('Validation runner (phantomJs)', function () {
         });
 
         it('should parse result from runner as success', function (done) {
+            // feature is to return a data object when given correct input
             var input1 = EXPECTED_VALID_REPORT_OBJECT;
             var strInput1 = JSON.stringify(input1);
             runner.handleResult(strInput1, function (err, dataObj) {
