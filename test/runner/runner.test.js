@@ -138,4 +138,21 @@ describe('Validation runner (phantomJs)', function () {
 
     });
 
+    describe('full tests', function(){
+        var runner = require('../../lib/runner.js');
+
+        it('should run with default config', function(done){
+            var options = {
+                pageUrl: 'about:blank',
+                spec: {},
+                pageRunTime: 0
+            };
+            runner.run(options, function(err, result){
+                refute(err);
+                assert(result);
+                done();
+            });
+        });
+    });
+
 });
