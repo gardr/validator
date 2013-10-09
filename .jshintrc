@@ -1,6 +1,9 @@
 {
     "globals": {
+<<<<<<< HEAD
         "jQuery"    : false,
+=======
+>>>>>>> added hooks setup
         "describe"  : false,
         "it"        : false,
         "expect"    : false,
@@ -8,7 +11,9 @@
         "runs"      : false,
         "beforeEach": false,
         "afterEach" : false,
-        "spyOn"     : false
+        "spyOn"     : false,
+        "phantom"   : false,
+        "system"    : false
     },
 
     "bitwise"       : true,

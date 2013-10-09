@@ -5,9 +5,15 @@ var refute = buster.refute;
 
 var proxyquire = require('proxyquire');
 
+var EXPECTED_VALID_REPORT_OBJECT = {
+    har: {},
+    clientHar: {},
+    probes: {}
+};
+
 var runner = proxyquire('../../lib/runner.js', {
     './spawn.js': function (options, handler, done) {
-        var result = JSON.stringify({har: {}, clientHar: {}, probes: {}});
+        var result = JSON.stringify(EXPECTED_VALID_REPORT_OBJECT);
         handler(result, done);
     }
 });
@@ -38,7 +44,9 @@ describe('Validation runner (phantomJs)', function () {
     it('should not accept an spec object with missing hooks or validators', function (done) {
         runner.run({
             pageUrl: 'valid',
-            spec: { notValid: true }
+            spec: {
+                notValid: true
+            }
         }, function (err, reportObj) {
             assert(err, 'Expected a error');
             refute(reportObj);
@@ -57,6 +65,7 @@ describe('Validation runner (phantomJs)', function () {
         });
     });
 
+
     it('should create a spec file path array', function () {
         var files = runner.collectSpec({
             timers: true,
@@ -66,7 +75,7 @@ describe('Validation runner (phantomJs)', function () {
         assert.equals(files.length, 2);
     });
 
-    it('should create a validator file path array', function(){
+    it('should create a validator file path array', function () {
         var files = runner.collectValidator({
             timers: true,
             latestJQuery: true
@@ -75,16 +84,16 @@ describe('Validation runner (phantomJs)', function () {
         assert.equals(files.length, 2);
     });
 
-    it('should return error on missing hook or validator files', function(done){
-        runner.statFiles(['invalid','invalid2'], function(err){
+    it('should return error on missing hook or validator files', function (done) {
+        runner.statFiles(['invalid', 'invalid2'], function (err) {
             assert(err);
             done();
         });
     });
 
-    it('should not throw a error if a valid list of files', function(done){
+    it('should not throw a error if a valid list of files', function (done) {
         var currentFile = path.join(__dirname, 'runner.test.js');
-        runner.statFiles([currentFile, currentFile, currentFile], function(err){
+        runner.statFiles([currentFile, currentFile, currentFile], function (err) {
             refute(err);
             done();
         });
@@ -102,11 +111,7 @@ describe('Validation runner (phantomJs)', function () {
         });
 
         it('should parse result from runner as success', function (done) {
-            var input1 = {
-                har: {},
-                clientHar: {},
-                probes: {}
-            };
+            var input1 = EXPECTED_VALID_REPORT_OBJECT;
             var strInput1 = JSON.stringify(input1);
             runner.handleResult(strInput1, function (err, dataObj) {
                 assert.isNull(err);
