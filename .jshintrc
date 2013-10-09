@@ -9,6 +9,8 @@
         "expect"    : false,
         "waitsFor"  : false,
         "runs"      : false,
+        "before"    : false,
+        "after"     : false,
         "beforeEach": false,
         "afterEach" : false,
         "spyOn"     : false,

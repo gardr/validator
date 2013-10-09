@@ -14,9 +14,11 @@ describe('spawn', function () {
     });
 
     it('should call phantom with a json as argument', function (done) {
-        this.spawn({pageUrl: 'about:blank', spec: {a: 'a'}}, function(argMock){
+        var input = {pageUrl: 'about:blank', spec: {a: 'a'}};
+        this.spawn(input, function(argMock){
+            refute.equals(input, argMock);
+            assert(~argMock.args[1].indexOf('headers'), 'Smoketest options failed');
             done();
         });
     });
 });
-;
