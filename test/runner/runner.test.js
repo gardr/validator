@@ -158,6 +158,22 @@ describe('Validation runner (phantomJs)', function () {
                 done();
             });
         });
+
+        it('should run with specs', function(done){
+            var options = {
+                pageUrl: 'about:blank',
+                spec: {log: true},
+                pageRunTime: 10
+            };
+            runner.run(options, function(err, result){
+                //console.log(err, result);
+                refute(err);
+                assert(result.log, 'expected a log');
+                done();
+            });
+        });
+
+
     });
 
 });
