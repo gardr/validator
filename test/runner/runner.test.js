@@ -141,6 +141,13 @@ describe('Validation runner (phantomJs)', function () {
             });
         });
 
+        it('should not try to parse undefined', function(){
+            runner.handleResult(undefined, function(err, dataObj){
+                assert(err);
+                refute(dataObj);
+            });
+        });
+
     });
 
     describe('full tests', function(){
@@ -163,10 +170,10 @@ describe('Validation runner (phantomJs)', function () {
             var options = {
                 pageUrl: 'about:blank',
                 spec: {log: true},
-                pageRunTime: 10
+                pageRunTime: 100
             };
             runner.run(options, function(err, result){
-                //console.log(err, result);
+                //console.log('ERROR:', err, 'STDOUT:', result);
                 refute(err);
                 assert(result.log, 'expected a log');
                 done();
