@@ -18,6 +18,9 @@ var runner = proxyquire('../../lib/runner.js', {
     }
 });
 
+var HOOKY_PATH = path.resolve(path.join(__dirname, 'fixtures', 'customhook', 'hooky.js'));
+var VALIDATOR_PATH = path.resolve(path.join(__dirname, 'fixtures', 'customvalidator', 'validator.js'));
+
 describe('Validation runner (phantomJs)', function () {
 
     it('should require a spec', function (done) {
@@ -28,17 +31,6 @@ describe('Validation runner (phantomJs)', function () {
             done();
         });
     });
-
-    // it('should require an object without a parentUrl', function (done) {
-    //     runner.run({
-    //         parentUrl: null,
-    //         spec: {}
-    //     }, function (err, reportObj) {
-    //         assert(err);
-    //         refute(reportObj);
-    //         done();
-    //     });
-    // });
 
     it('should require a spec object with hooks or validators', function (done) {
         runner.run({
@@ -69,20 +61,24 @@ describe('Validation runner (phantomJs)', function () {
         // the api says that runner should provide a function to retrieve a spec, not reflected in the test description
         var files = runner.collectSpec({
             timers: true,
-            latestJQuery: true
+            latestJQuery: true,
+            hooky: HOOKY_PATH
         });
 
-        assert.equals(files.length, 2);
+        assert.equals(files.length, 3);
+        assert.equals(files[2], HOOKY_PATH);
     });
 
     it('should create a validator file path array', function () {
         // should provide a list of validator result files
         var files = runner.collectValidator({
             timers: true,
-            latestJQuery: true
+            latestJQuery: true,
+            valy: VALIDATOR_PATH
         });
 
-        assert.equals(files.length, 2);
+        assert.equals(files.length, 3);
+        assert.equals(files[2], VALIDATOR_PATH);
     });
 
     it('should return error on missing hook or validator files', function (done) {
@@ -178,7 +174,7 @@ describe('Validation runner (phantomJs)', function () {
 
         it('should run with multiple specs', function(done){
             var options = {
-                spec: {log: true, pasties: true },
+                spec: {log: true, hooky: HOOKY_PATH },
                 pageRunTime: 100
             };
             runner.run(options, function(err, result){
