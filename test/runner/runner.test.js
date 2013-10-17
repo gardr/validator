@@ -22,7 +22,6 @@ describe('Validation runner (phantomJs)', function () {
 
     it('should require a spec', function (done) {
         runner.run({
-            pageUrl: 'about:blank',
             spec: null
         }, function (err, reportObj) {
             refute.isNull(reportObj);
@@ -30,20 +29,20 @@ describe('Validation runner (phantomJs)', function () {
         });
     });
 
-    it('should require an object without a pageUrl', function (done) {
-        runner.run({
-            pageUrl: null,
-            spec: {}
-        }, function (err, reportObj) {
-            assert(err);
-            refute(reportObj);
-            done();
-        });
-    });
+    // it('should require an object without a parentUrl', function (done) {
+    //     runner.run({
+    //         parentUrl: null,
+    //         spec: {}
+    //     }, function (err, reportObj) {
+    //         assert(err);
+    //         refute(reportObj);
+    //         done();
+    //     });
+    // });
 
     it('should require a spec object with hooks or validators', function (done) {
         runner.run({
-            pageUrl: 'valid',
+            parentUrl: 'valid',
             spec: {
                 notValid: true
             }
@@ -57,7 +56,6 @@ describe('Validation runner (phantomJs)', function () {
     it('should call spawn when options are valid', function (done) {
         // The description does not match the test, spawn is an internal unknown to runner
         runner.run({
-            pageUrl: 'about:blank',
             spec: {}
         }, function (err, reportObj) {
             assert.isNull(err);
@@ -155,31 +153,40 @@ describe('Validation runner (phantomJs)', function () {
 
         it('should run with default config', function(done){
             var options = {
-                pageUrl: 'about:blank',
                 spec: {},
                 pageRunTime: 0
             };
             runner.run(options, function(err, result){
+                //console.log('ERROR:', err, 'STDOUT:', result);
                 refute(err);
                 assert(result);
                 done();
             });
         });
 
-        it('should run with specs', function(done){
+        it('should run with log spec', function(done){
             var options = {
-                pageUrl: 'about:blank',
                 spec: {log: true},
                 pageRunTime: 100
             };
             runner.run(options, function(err, result){
-                //console.log('ERROR:', err, 'STDOUT:', result);
                 refute(err);
                 assert(result.log, 'expected a log');
                 done();
             });
         });
 
+        it('should run with multiple specs', function(done){
+            var options = {
+                spec: {log: true, pasties: true },
+                pageRunTime: 100
+            };
+            runner.run(options, function(err, result){
+                refute(err);
+                assert(result.log, 'expected a log');
+                done();
+            });
+        });
 
     });
 
