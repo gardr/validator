@@ -1,9 +1,6 @@
 {
     "globals": {
-<<<<<<< HEAD
         "jQuery"    : false,
-=======
->>>>>>> added hooks setup
         "describe"  : false,
         "it"        : false,
         "expect"    : false,
