@@ -11,31 +11,33 @@ var EXPECTED_VALID_REPORT_OBJECT = {
     probes: {}
 };
 
-var runner = proxyquire('../../lib/runner.js', {
+var runner = proxyquire('../../lib/index.js', {
     './spawn.js': function (options, handler, done) {
         var result = JSON.stringify(EXPECTED_VALID_REPORT_OBJECT);
         handler(result, done);
+    },
+    './validate.js': function(data, validators, done){
+        done(null, {});
     }
 });
 
 var HOOKY_PATH = path.resolve(path.join(__dirname, 'fixtures', 'customhook', 'hooky.js'));
-var VALIDATOR_PATH = path.resolve(path.join(__dirname, 'fixtures', 'customvalidator', 'validator.js'));
 
-describe('Validation runner (phantomJs)', function () {
+describe('Runner (phantomJs)', function () {
 
-    it('should require a spec', function (done) {
+    it('should require a hooks key', function (done) {
         runner.run({
-            spec: null
+            hooks: null
         }, function (err, reportObj) {
             refute.isNull(reportObj);
             done();
         });
     });
 
-    it('should require a spec object with hooks or validators', function (done) {
+    it('should require a hooks object with hooks or validators', function (done) {
         runner.run({
             parentUrl: 'valid',
-            spec: {
+            hooks: {
                 notValid: true
             }
         }, function (err, reportObj) {
@@ -48,55 +50,14 @@ describe('Validation runner (phantomJs)', function () {
     it('should call spawn when options are valid', function (done) {
         // The description does not match the test, spawn is an internal unknown to runner
         runner.run({
-            spec: {}
+            hooks: {}
         }, function (err, reportObj) {
-            assert.isNull(err);
+            refute(err);
             assert.isObject(reportObj);
             done();
         });
     });
 
-
-    it('should create a spec file path array', function () {
-        // the api says that runner should provide a function to retrieve a spec, not reflected in the test description
-        var files = runner.collectSpec({
-            timers: true,
-            latestJQuery: true,
-            hooky: HOOKY_PATH
-        });
-
-        assert.equals(files.length, 3);
-        assert.equals(files[2], HOOKY_PATH);
-    });
-
-    it('should create a validator file path array', function () {
-        // should provide a list of validator result files
-        var files = runner.collectValidator({
-            timers: true,
-            latestJQuery: true,
-            valy: VALIDATOR_PATH
-        });
-
-        assert.equals(files.length, 3);
-        assert.equals(files[2], VALIDATOR_PATH);
-    });
-
-    it('should return error on missing hook or validator files', function (done) {
-        // this feature is for retrieval of stat files, not mentioned in the description
-        runner.statFiles(['invalid', 'invalid2'], function (err) {
-            assert(err);
-            done();
-        });
-    });
-
-    it('should not throw a error if a valid list of files', function (done) {
-        var currentFile = path.join(__dirname, 'runner.test.js');
-        runner.statFiles([currentFile, currentFile, currentFile], function (err) {
-            refute(err);
-            done();
-        });
-
-    });
 
     describe('handleResult', function () {
         it('should return an error when parsing invalid json result', function (done) {
@@ -145,11 +106,11 @@ describe('Validation runner (phantomJs)', function () {
     });
 
     describe('full tests', function(){
-        var runner = require('../../lib/runner.js');
+        var runner = require('../../lib/index.js');
 
         it('should run with default config', function(done){
             var options = {
-                spec: {},
+                hooks: {},
                 pageRunTime: 0
             };
             runner.run(options, function(err, result){
@@ -160,26 +121,28 @@ describe('Validation runner (phantomJs)', function () {
             });
         });
 
-        it('should run with log spec', function(done){
+        it('should run with log hooks', function(done){
             var options = {
-                spec: {log: true},
-                pageRunTime: 100
+                hooks: {log: true},
+                pageRunTime: 1
             };
             runner.run(options, function(err, result){
                 refute(err);
-                assert(result.log, 'expected a log');
+                assert(result.logs, 'expected a log');
                 done();
             });
         });
 
-        it('should run with multiple specs', function(done){
+        it('should run with multiple hooks', function(done){
             var options = {
-                spec: {log: true, hooky: HOOKY_PATH },
-                pageRunTime: 100
+                hooks: {errors: true, log: true, hooky: HOOKY_PATH },
+                pageRunTime: 1
             };
             runner.run(options, function(err, result){
                 refute(err);
-                assert(result.log, 'expected a log');
+                assert(result.logs, 'expected a log');
+                assert(result.logs.length > 0, 'by default phantom main.js should emit logs');
+                assert.equals(result.hooky, 'wooky');
                 done();
             });
         });
