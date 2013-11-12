@@ -111,10 +111,9 @@ describe('Runner (phantomJs)', function () {
         it('should run with default config', function(done){
             var options = {
                 hooks: {},
-                pageRunTime: 0
+                pageRunTime: 25
             };
             runner.run(options, function(err, result){
-                //console.log('ERROR:', err, 'STDOUT:', result);
                 refute(err);
                 assert(result);
                 done();
@@ -124,7 +123,7 @@ describe('Runner (phantomJs)', function () {
         it('should run with log hooks', function(done){
             var options = {
                 hooks: {log: true},
-                pageRunTime: 1
+                pageRunTime: 25
             };
             runner.run(options, function(err, result){
                 refute(err);
@@ -136,7 +135,7 @@ describe('Runner (phantomJs)', function () {
         it('should run with multiple hooks', function(done){
             var options = {
                 hooks: {errors: true, log: true, hooky: HOOKY_PATH },
-                pageRunTime: 1
+                pageRunTime: 100
             };
             runner.run(options, function(err, result){
                 refute(err);
