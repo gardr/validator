@@ -114,6 +114,9 @@ describe('Runner (phantomJs)', function () {
                 pageRunTime: 25
             };
             runner.run(options, function(err, result){
+                if (err){
+                    console.log(err);
+                }
                 refute(err);
                 assert(result);
                 done();
@@ -126,6 +129,9 @@ describe('Runner (phantomJs)', function () {
                 pageRunTime: 25
             };
             runner.run(options, function(err, result){
+                if (err){
+                    console.log(err);
+                }
                 refute(err);
                 assert(result.logs, 'expected a log');
                 done();
@@ -138,6 +144,9 @@ describe('Runner (phantomJs)', function () {
                 pageRunTime: 100
             };
             runner.run(options, function(err, result){
+                if (err){
+                    console.log(err);
+                }
                 refute(err);
                 assert(result.logs, 'expected a log');
                 assert(result.logs.length > 0, 'by default phantom main.js should emit logs');
