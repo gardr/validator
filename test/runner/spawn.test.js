@@ -1,7 +1,8 @@
-var proxyquire = require('proxyquire');
 var buster = require('buster-assertions');
 var assert = buster.assert;
 var refute = buster.refute;
+
+var proxyquire = require('proxyquire');
 
 describe('spawn', function () {
 
