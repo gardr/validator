@@ -1,5 +1,6 @@
 validator
 =========
+[![Build Status](https://travis-ci.org/pasties/validator.png)](https://travis-ci.org/pasties/validator)
 
 # Installation
 
