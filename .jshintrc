@@ -10,8 +10,7 @@
         "beforeEach": false,
         "afterEach" : false,
         "spyOn"     : false,
-        "phantom"   : false,
-        "system"    : false
+        "phantom"   : false
     },
 
     "bitwise"       : true,
