@@ -8,8 +8,10 @@ describe('spawn', function () {
 
     before(function () {
         this.spawn = proxyquire('../../lib/spawn.js', {
-            'shellout': function (bin, args, callback) {
-                callback(null, {bin: bin, args: args, callback: callback});
+            'child_process': {
+                execFile: function (bin, args, callback) {
+                    callback(null, {bin: bin, args: args, callback: callback});
+                }
             }
         });
     });
