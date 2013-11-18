@@ -124,6 +124,7 @@ describe('Runner (phantomJs)', function () {
         });
 
         it('should run with log hooks', function(done){
+            this.timeout(3000);
             var options = {
                 hooks: {log: true},
                 pageRunTime: 25
@@ -139,6 +140,7 @@ describe('Runner (phantomJs)', function () {
         });
 
         it('should run with multiple hooks', function(done){
+            this.timeout(3000);
             var options = {
                 hooks: {errors: true, log: true, hooky: HOOKY_PATH },
                 pageRunTime: 100
