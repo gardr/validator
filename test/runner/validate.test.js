@@ -20,7 +20,7 @@ describe('Validate', function () {
         assert.equals(files[0], VALIDATOR_PATH_1);
         assert.equals(files[1], VALIDATOR_PATH_2);
 
-        validate({logs: []}, files, function(err, harvested, report){
+        validate({logs: []}, {validatorFiles: files}, function(err, harvested, report){
             refute(err);
             assert.isObject(report);
             assert.equals(report.info.length, 1);
