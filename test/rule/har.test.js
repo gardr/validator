@@ -22,7 +22,7 @@ describe('HAR hook', function () {
         hook.onPageOpen();
         hook.onBeforeExit(api);
 
-        var res = result.har_input.resources;
+        var res = result.harInput.resources;
 
         assert.equals(res.length, 1);
         assert(res[0].startReply);
@@ -45,12 +45,16 @@ describe('HAR validator', function () {
     it('should call createHar and output to report', function (done) {
 
         var harvested = {
-            har_input: {}
+            harInput: {
+                resources: [],
+                startTime: null,
+                endTime: null
+            }
         };
 
         validator.validate(harvested, null, function () {
-            assert(harvested.har_file);
-            assert.equals(harvested.har_file, harvested.har_input);
+            assert(harvested.HARFile);
+            assert.equals(harvested.HARFile.resources.length, harvested.harInput.resources.length);
             done();
         });
     });
