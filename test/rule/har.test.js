@@ -81,7 +81,7 @@ describe('HAR validator', function () {
 
         server = http.createServer(function (request, response) {
             request.addListener('end', function () {
-                console.log('\nserving for test', request.url);
+                //console.log('\nserving for test', request.url);
                 if (redirectsRegExp.test(request.url)){
                     var match = request.url.match(redirectsRegExp);
                     var counter = parseInt(match[1], 10);
