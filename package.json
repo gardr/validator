@@ -1,6 +1,6 @@
 {
   "name": "pasties-validator",
-  "version": "0.0.6",
+  "version": "0.0.7",
   "main": "index.js",
   "scripts": {
     "test": "./node_modules/.bin/mocha test/**/*.test.js --reporter spec"
@@ -13,11 +13,13 @@
     "phantomjs": "~1.9.2-2",
     "async": "~0.2.9",
     "hoek": "~1.1.1",
-    "moment": "~2.4.0"
+    "moment": "~2.4.0",
+    "request": "~2.27.0"
   },
   "devDependencies": {
     "mocha": "~1.13.0",
     "proxyquire": "~0.5.1",
-    "buster-assertions": "~0.10.4"
+    "buster-assertions": "~0.10.4",
+    "node-static": "~0.7.2"
   }
 }
