@@ -81,6 +81,7 @@ describe('HAR validator', function () {
 
         server = http.createServer(function (request, response) {
             request.addListener('end', function () {
+                console.log('\nserving for test', request.url);
                 if (redirectsRegExp.test(request.url)){
                     var match = request.url.match(redirectsRegExp);
                     var counter = parseInt(match[1], 10);
@@ -133,8 +134,6 @@ describe('HAR validator', function () {
             refute(get('/addyn.js').compressed);
             assert(get('/addyn.js?gzip=true').compressed, 'gzip is on, so compressed flag should be true');
             assert.equals(get('/addyn.js?redirect=5&gzip=true').redirects.length, 6);
-
-
 
             assert.isObject(harvested.rawFileDataSummary);
             assert.equals(harvested.rawFileDataSummary.total.redirects, 6);
