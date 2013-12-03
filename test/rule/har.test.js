@@ -114,6 +114,8 @@ describe('HAR validator', function () {
         return har;
     }
 
+    var collectHAREntries = require('../../lib/collectHAREntries.js');
+
     it('should populate real sizes and collect contents', function(done){
         var harvested = {
             HARFile: getHARfile()
@@ -124,7 +126,7 @@ describe('HAR validator', function () {
             return harvested.rawFileData[host+key];
         }
 
-        validator.getRealResources(harvested, null, function(){
+        collectHAREntries(harvested, null, function(){
 
             assert.isObject(harvested.HARFile);
 
