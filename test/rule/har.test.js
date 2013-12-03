@@ -135,11 +135,21 @@ describe('HAR validator', function () {
             assert(get('/addyn.js?gzip=true').compressed, 'gzip is on, so compressed flag should be true');
             assert.equals(get('/addyn.js?redirect=5&gzip=true').redirects.length, 6);
 
-            assert.isObject(harvested.rawFileDataSummary);
-            assert.equals(harvested.rawFileDataSummary.total.redirects, 6);
-            assert.equals(harvested.rawFileDataSummary.total.rawRequests, 5);
-            assert.equals(harvested.rawFileDataSummary.total.requests, 11);
 
+            assert.isObject(harvested.rawFileDataSummary);
+
+            var total = harvested.rawFileDataSummary.total;
+            assert.isObject(total);
+            assert.equals(total.redirects, 6);
+            assert.equals(total.rawRequests, 5);
+            assert.equals(total.requests, 11);
+            assert.isNumber(total.size, 'size should be a number');
+            assert.isNumber(total.fullSize, 'fullSize should be a number');
+
+            var tips = harvested.rawFileDataSummary.tips;
+            assert.isNumber(tips.possibleCompressTarget,     'possibleCompressTarget should be a number');
+            assert.isNumber(tips.possibleCompressImprovement,'possibleCompressImprovement should be a number');
+            assert.isNumber(tips.possibleCompressWithOnlyScriptGzip,'possibleCompressWithOnlyScriptGzip should be a number');
             //console.log(harvested.rawFileDataSummary)
 
             done();
