@@ -1,0 +1,67 @@
+{
+  "request": {
+    "headers": [
+      {
+        "name": "User-Agent",
+        "value": "Mozilla\/5.0 (iPad; CPU OS 6_0 like Mac OS X) AppleWebKit\/536.26     (KHTML, like Gecko) Version\/6.0 Mobile\/10A5355d Safari\/8536.25"
+      },
+      {
+        "name": "Accept",
+        "value": "*\/*"
+      },
+      {
+        "name": "Accept-Encoding",
+        "value": "identify"
+      },
+      {
+        "name": "Cache-Control",
+        "value": "no-cache"
+      }
+    ],
+    "id": 1,
+    "method": "GET",
+    "time": "2013-12-04T09:04:25.040Z",
+    "url": "dummy"
+  },
+  "startReply": {
+    "bodySize": 497,
+    "contentType": null,
+    "headers": [
+      {
+        "name": "Last-Modified",
+        "value": "Wed, 06 Nov 2013 13:51:18 GMT"
+      },
+      {
+        "name": "Content-Length",
+        "value": "497"
+      }
+    ],
+    "id": 1,
+    "redirectURL": null,
+    "stage": "start",
+    "status": null,
+    "statusText": null,
+    "time": "2013-12-04T09:04:25.054Z",
+    "url": "dummy"
+  },
+  "endReply": {
+    "contentType": null,
+    "headers": [
+      {
+        "name": "Last-Modified",
+        "value": "Wed, 06 Nov 2013 13:51:18 GMT"
+      },
+      {
+        "name": "Content-Length",
+        "value": "497"
+      }
+    ],
+    "id": 1,
+    "redirectURL": null,
+    "stage": "end",
+    "status": null,
+    "statusText": null,
+    "time": "2013-12-04T09:04:25.056Z",
+    "url": "dummy"
+  }
+}

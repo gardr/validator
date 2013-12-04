@@ -37,7 +37,6 @@ describe('HAR hook', function () {
 });
 
 var proxyquire = require('proxyquire');
-var HARFile = require('./fixtures/HARFile.json');
 
 
 
@@ -103,22 +102,31 @@ describe('HAR validator', function () {
         }).listen();
     });
 
-    function getHARfile(){
-        var har = hoek.clone(HARFile);
+
+    //var HARFile = require('./fixtures/HARFile.json');
+    var rawResource = require('./fixtures/raw.json');
+    function getInput(){
         var host = 'http://localhost:'+server.address().port;
 
-        har.log.entries.forEach(function(entry){
-            entry.request.url = host + entry.request.url ;
-        });
+        var resources = ['/addyn.js?redirect=5&gzip=true', '/addyn.js?gzip=true', '/addyn.js', '/bg.jpg', '/logo.png'];
 
-        return har;
+        return resources.map(function(url){
+            var entry = hoek.clone(rawResource);
+            url = host+url;
+            entry.request.url = url;
+            entry.startReply.url = url;
+            entry.endReply.url = url;
+            return entry;
+        });
     }
 
     var processResources = require('../../lib/processResources.js');
 
     it('should populate real sizes and collect contents', function(done){
         var harvested = {
-            HARFile: getHARfile()
+            harInput: {
+                resources: getInput()
+            }
         };
 
         var host = 'http://localhost:'+server.address().port;
@@ -128,7 +136,7 @@ describe('HAR validator', function () {
 
         processResources(harvested, null, function(){
 
-            assert.isObject(harvested.HARFile);
+            assert.isObject(harvested.harInput);
 
             assert.isObject(harvested.rawFileData);
             assert.equals(Object.keys(harvested.rawFileData).length, 5);
@@ -151,8 +159,8 @@ describe('HAR validator', function () {
             var tips = harvested.rawFileDataSummary.tips;
             assert.isNumber(tips.possibleCompressTarget,     'possibleCompressTarget should be a number');
             assert.isNumber(tips.possibleCompressImprovement,'possibleCompressImprovement should be a number');
-            assert.isNumber(tips.possibleCompressWithOnlyScriptGzip,'possibleCompressWithOnlyScriptGzip should be a number');
-            //console.log(harvested.rawFileDataSummary)
+            assert.isNumber(tips.possibleCompressWithOnlyScriptGzip,
+                'possibleCompressWithOnlyScriptGzip should be a number');
 
             done();
         });
