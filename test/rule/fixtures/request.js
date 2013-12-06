@@ -21,7 +21,7 @@ module.exports = {
         "id": 1,
         "method": "GET",
         "time": new Date("2013-10-08T16:37:20.206Z"),
-        "url": "http://localhost:3000/report/parent.html?url=%2Fbuggy.js&iframeUrl=http%3A%2F%2Flocalhost%3A3000%2Fhtml%2Fpasties%2Fmobile.htm"
+        "url": "http://localhost:3000/report/parent.html?url=%2Fbuggy.js&iframeUrl=http%3A%2F%2Flocalhost%3A3000%2Fhtml%2Fgardr%2Fmobile.htm"
     },
     "startReply": {
         "bodySize": 472,
@@ -74,7 +74,7 @@ module.exports = {
         "status": 200,
         "statusText": "OK",
         "time": new Date("2013-10-08T16:37:20.215Z"),
-        "url": "http://localhost:3000/report/parent.html?url=%2Fbuggy.js&iframeUrl=http%3A%2F%2Flocalhost%3A3000%2Fhtml%2Fpasties%2Fmobile.htm"
+        "url": "http://localhost:3000/report/parent.html?url=%2Fbuggy.js&iframeUrl=http%3A%2F%2Flocalhost%3A3000%2Fhtml%2Fgardr%2Fmobile.htm"
     },
     "endReply": {
         "contentType": "text/html; charset=UTF-8",
@@ -126,6 +126,6 @@ module.exports = {
         "status": 200,
         "statusText": "OK",
         "time": new Date("2013-10-08T16:37:20.216Z"),
-        "url": "http://localhost:3000/report/parent.html?url=%2Fbuggy.js&iframeUrl=http%3A%2F%2Flocalhost%3A3000%2Fhtml%2Fpasties%2Fmobile.htm"
+        "url": "http://localhost:3000/report/parent.html?url=%2Fbuggy.js&iframeUrl=http%3A%2F%2Flocalhost%3A3000%2Fhtml%2Fgardr%2Fmobile.htm"
     }
 };

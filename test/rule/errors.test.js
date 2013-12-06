@@ -4,48 +4,49 @@ var refute = buster.refute;
 
 var hook = require('../../lib/rule/hook/errors.js');
 
-// describe('Errors hook', function () {
+/*
+describe('Errors hook', function () {
 
-//     it('should inject error probe in pasties frame', function () {
-//         var calls = 0;
-//         var _window = {
-//             'top': {
-//                 __errors: []
-//             },
-//             'onerror': function () {
-//                 calls++;
-//             }
-//         };
-//         var api = {
-//             'switchToIframe': function () {
-//                 calls++;
-//             },
-//             'evaluate': function (fn) {
-//                 global.window = _window;
-//                 calls++;
-//                 fn();
-//                 global.window = null;
-//             }
-//         };
+    it('should inject error probe in gardr frame', function () {
+        var calls = 0;
+        var _window = {
+            'top': {
+                __errors: []
+            },
+            'onerror': function () {
+                calls++;
+            }
+        };
+        var api = {
+            'switchToIframe': function () {
+                calls++;
+            },
+            'evaluate': function (fn) {
+                global.window = _window;
+                calls++;
+                fn();
+                global.window = null;
+            }
+        };
 
-//         hook.onNavigationRequested('invalid', null, null, null, api);
+        hook.onNavigationRequested('invalid', null, null, null, api);
 
-//         assert.equals(calls, 0);
+        assert.equals(calls, 0);
 
-//         var url = 'http://valid.no/page.html?param=param#PASTIES_' + Math.random();
-//         hook.onNavigationRequested(url, null, null, null, api);
+        var url = 'http://valid.no/page.html?param=param#GARDR_' + Math.random();
+        hook.onNavigationRequested(url, null, null, null, api);
 
-//         assert.equals(calls, 2);
+        assert.equals(calls, 2);
 
-//         _window.onerror('some error', 'url', 'lineNumber');
+        _window.onerror('some error', 'url', 'lineNumber');
 
-//         assert.equals(calls, 3);
-//         assert.equals(_window.top.__errors.length, 1);
+        assert.equals(calls, 3);
+        assert.equals(_window.top.__errors.length, 1);
 
-//     });
+    });
 
-// });
-
+});
+*/
 var validator = require('../../lib/rule/validator/errors.js');
 describe('Errors validator', function () {
 

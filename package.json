@@ -1,5 +1,5 @@
 {
-  "name": "pasties-validator",
+  "name": "gardr-validator",
   "version": "0.0.10",
   "main": "index.js",
   "scripts": {
@@ -7,7 +7,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "https://github.com/pasties/validator"
+    "url": "https://github.com/gardr/validator"
   },
   "dependencies": {
     "phantomjs": "~1.9.2-2",
