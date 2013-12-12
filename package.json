@@ -1,6 +1,6 @@
 {
   "name": "gardr-validator",
-  "version": "0.0.10",
+  "version": "0.0.11",
   "main": "index.js",
   "scripts": {
     "test": "./node_modules/.bin/mocha test/**/*.test.js --reporter list"
