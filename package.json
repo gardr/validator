@@ -17,7 +17,7 @@
     "request": "~2.29.0"
   },
   "devDependencies": {
-    "mocha": "~1.13.0",
+    "mocha": "~1.15.0",
     "proxyquire": "~0.5.1",
     "buster-assertions": "~0.10.4",
     "node-static": "~0.7.2"
