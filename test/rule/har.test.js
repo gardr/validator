@@ -63,7 +63,7 @@ describe('HAR validator', function () {
             assert(harvested.HARFile);
             assert.equals(0, harvested.harInput.resources.length);
             done();
-        });
+        }, {});
     });
 
 
@@ -163,7 +163,7 @@ describe('HAR validator', function () {
                 'possibleCompressWithOnlyScriptGzip should be a number');
 
             done();
-        });
+        }, {});
     });
 
 
