@@ -1,5 +1,5 @@
 var path = require('path');
-var buster = require('buster-assertions');
+var buster = require('referee');
 var assert = buster.assert;
 var refute = buster.refute;
 
@@ -134,7 +134,7 @@ describe('Runner (phantomJs)', function () {
                     console.log(err);
                 }
                 refute(err);
-                assert(result.logs, 'expected a log');
+                assert(result.log.logs, 'expected a log');
                 done();
             });
         });
@@ -142,7 +142,9 @@ describe('Runner (phantomJs)', function () {
         it('should run with multiple hooks', function(done){
             this.timeout(3000);
             var options = {
-                hooks: {errors: true, log: true, hooky: HOOKY_PATH },
+                hooks: {har: true, errors: true, log: true, hooky: HOOKY_PATH },
+                preprocessors: {har: true, log: true },
+                validators: {errors: true, log: true },
                 pageRunTime: 100
             };
             runner.run(options, function(err, result){
@@ -150,9 +152,9 @@ describe('Runner (phantomJs)', function () {
                     console.log(err);
                 }
                 refute(err);
-                assert(result.logs, 'expected a log');
-                assert(result.logs.length > 0, 'by default phantom main.js should emit logs');
-                assert.equals(result.hooky, 'wooky');
+                assert(result.log.logs, 'expected a log');
+                assert(result.log.logs.length > 0, 'by default phantom main.js should emit logs');
+                assert.equals(result.hooky.spooky, 'wooky', 'results should be namespaced');
                 done();
             });
         });

@@ -1,4 +1,5 @@
 module.exports = {
+    'dependencies': ['hooky'],
     validate: function(harvested, report, next){
         report.info('some info here');
 

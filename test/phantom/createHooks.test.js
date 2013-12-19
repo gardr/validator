@@ -1,9 +1,13 @@
-var buster = require('buster-assertions');
+var buster = require('referee');
 var assert = buster.assert;
 var refute = buster.refute;
 
+var hooksApi = require('../../lib/phantom/hooksApi.js');
+var createHooks = require('../../lib/phantom/createHooks.js');
+
 describe('createHooks', function () {
-    var createHooks = require('../../lib/phantom/createHooks.js');
+
+    var baseApi = hooksApi({}, {}, {}, 'common');
 
     it('should should populate page object with events', function () {
         var fixture = __dirname + '/fixtures/hook.js';
@@ -13,38 +17,48 @@ describe('createHooks', function () {
         var options = {
             hooks: [fixture]
         };
-        createHooks(page, options);
+        createHooks(page, options, baseApi.createSubContext(this.test.title));
 
         assert.equals(expectedLength, Object.keys(page).length);
     });
 
     it('events should append own args with api args', function (done) {
         var page = {};
-        var api = {};
         var arg1 = 1;
         var arg2 = 2;
         var times;
-        var fixture = {
-            onBeforeExit: function (_arg1, _arg2, _api) {
-                assert.equals(this, page);
-                assert.equals(_arg1, arg1);
-                assert.equals(_arg2, arg2);
-                assert.equals(_api, api);
+
+        function getFixture(name) {
+            return {
+                name: name,
+                onBeforeExit: function () {
+                    setTimeout(finish.apply(this, Array.prototype.slice.call(arguments)), 1);
+                }
+            };
+        }
+        var options = {
+            hooks: [getFixture('key1'), getFixture('key2'), getFixture('key3'), getFixture('key4')]
+        };
+
+        times = options.hooks.length;
+        createHooks(page, options, baseApi);
+
+        page.onBeforeExit.call(page, arg1, arg2);
+
+        function finish(_arg1, _arg2, _api) {
+            var self = this;
+            return function () {
+                assert.equals(self, page, 'context/this should be page');
+                assert.equals(_arg1, arg1, 'arg1 should be same as passed in');
+                assert.equals(_arg2, arg2, 'arg2 should be same as passed in');
+                refute.equals(_api.name, baseApi.name);
                 times--;
                 if (times <= 0) {
                     done();
                 }
+            };
+        }
 
-            }
-        };
-        var options = {
-            hooks: [fixture, fixture, fixture, fixture]
-        };
-
-        times = options.hooks.length;
-        createHooks(page, options, api);
-
-        page.onBeforeExit.call(page, arg1, arg2);
     });
 
     it('isCustom should only return if key is custom key', function () {
@@ -54,13 +68,42 @@ describe('createHooks', function () {
 
     it('should should trigger only custom functions', function (done) {
         var page = {};
+        var testTitle = this.test.title;
+        var api = baseApi.createSubContext('common');
+        var called = 0;
         var options = {
             hooks: [{
-                onBeforeExit: done
+                name: testTitle,
+                onAlert: function(msg, _api){
+                    if (msg && _api){
+                        called++;
+                    }
+                },
+                onBeforeExit: function (_api) {
+                    called++;
+                    setTimeout(finish(_api), 1);
+                }
             }]
         };
-        var trigger = createHooks(page, options);
+        var trigger = createHooks(page, options, api);
 
+        page.onAlert('message');
         trigger('onBeforeExit');
+
+
+        function finish(_api) {
+            return function () {
+                _api.set('key', 'value');
+                assert.equals(called, 2);
+                assert.isObject(_api, '_api should be a object');
+                assert.equals(_api.getResult().key, 'value', 'context value should be correct');
+                assert.equals(_api.name, testTitle, 'api inside should be in correct context');
+
+                assert.equals(api.name, 'common');
+                assert.equals(api.getGlobalResult()[testTitle].key, 'value');
+                done();
+            };
+        }
+
     });
 });

@@ -1,4 +1,4 @@
-// var buster = require('buster-assertions');
+// var buster = require('referee');
 // var assert = buster.assert;
 // var refute = buster.refute;
 

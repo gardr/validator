@@ -1,4 +1,4 @@
-var buster = require('buster-assertions');
+var buster = require('referee');
 var assert = buster.assert;
 var refute = buster.refute;
 
@@ -24,7 +24,7 @@ describe('spawn', function () {
         var input = {pageUrl: 'about:blank', spec: {a: 'a'}};
         this.spawn(input, function( argMock){
             refute.equals(input, argMock);
-            assert(~argMock.args[1].indexOf('headers'), 'Smoketest options failed');
+            assert(argMock.args[1].indexOf('headers') >-1, 'Smoketest options failed');
             done();
         });
     });

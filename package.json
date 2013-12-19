@@ -1,6 +1,6 @@
 {
   "name": "gardr-validator",
-  "version": "0.0.12",
+  "version": "0.1.0",
   "main": "index.js",
   "scripts": {
     "test": "./node_modules/.bin/mocha test/**/*.test.js --reporter list"
@@ -19,7 +19,7 @@
   "devDependencies": {
     "mocha": "~1.15.0",
     "proxyquire": "~0.5.1",
-    "buster-assertions": "~0.10.4",
-    "node-static": "~0.7.2"
+    "node-static": "~0.7.2",
+    "referee": "~1.0.2"
   }
 }

@@ -1,17 +1,18 @@
 var path = require('path');
-var buster = require('buster-assertions');
+var buster = require('referee');
 var assert = buster.assert;
 var refute = buster.refute;
 var helpers = require('../../lib/helpers.js');
-var validate = require('../../lib/validate.js').validate;
+var validatorLib = require('../../lib/validate.js');
+var validate = validatorLib.validate;
 
 var VALIDATOR_PATH_1 = path.resolve(path.join(__dirname, 'fixtures', 'customvalidator', 'validator1.js'));
 var VALIDATOR_PATH_2 = path.resolve(path.join(__dirname, 'fixtures', 'customvalidator', 'validator2.js'));
 
 describe('Validate', function () {
     var files = helpers.collectValidator({
-        val1: VALIDATOR_PATH_1,
-        val2: VALIDATOR_PATH_2
+        'val1': VALIDATOR_PATH_1,
+        'val2': VALIDATOR_PATH_2
     });
 
     it('should run a set of validators on probed data', function (done) {
@@ -20,7 +21,17 @@ describe('Validate', function () {
         assert.equals(files[0], VALIDATOR_PATH_1);
         assert.equals(files[1], VALIDATOR_PATH_2);
 
-        validate({logs: []}, {validatorFiles: files}, function(err, harvested, report){
+        var harvested = {
+            'common': {
+                'logs': []
+            },
+            'hooky': {},
+            'hooky2': {}
+        };
+
+        validate(harvested, {
+            validatorFiles: files
+        }, function (err, harvested, report) {
             refute(err);
             assert.isObject(report);
             assert.equals(report.info.length, 1);
@@ -31,5 +42,89 @@ describe('Validate', function () {
         });
 
     });
+
+    it('should only provide depedencies', function (done) {
+
+        var data = {
+            'custom': {
+                'data': 1
+            },
+            'common': {},
+            'filter': true
+        };
+        var validators = {
+            'validatorFiles': [{
+                validate: function (harvested, report, next) {
+                    refute(harvested.filter);
+                    assert.equals(harvested.custom.data, data.custom.data);
+                    next();
+                },
+                dependencies: ['custom'],
+                name: 'validatorx'
+            }]
+        };
+
+        validate(data, validators, done);
+    });
+
+    it('should run preprocessors', function(done){
+
+        var data = {
+            'custom': {
+                'data': 1
+            },
+            'common': {},
+            'filter': true
+        };
+        var called = 0;
+
+        var options = {
+            'validatorFiles': [],
+            'preprocessorFiles': [{
+                preprocess: function (harvested, output, next) {
+                    called++;
+                    output('custom', 'key', 'value');
+                    output('key2', 'value2');
+                    refute(harvested.filter, 'should only provide dependencies');
+                    assert.equals(harvested.custom.data, data.custom.data);
+                    next();
+                },
+                dependencies: ['custom'],
+                name: 'preprocessX'
+            }]
+        };
+
+        validate(data, options, function(err, harvested){
+            assert.equals(called, 1, 'expect preprocessors to be called 1 time');
+            assert.equals(harvested.custom.key, 'value');
+            assert.equals(harvested.custom.key2, 'value2');
+            done();
+        });
+
+    });
+
+    describe('filterDataByDependencies', function () {
+        it('should throw if attempts to change current object', function () {
+
+            var input = {
+                common: {}
+            };
+
+            var o = validatorLib.filterDataByDependencies(input, [], 'test');
+
+            assert(Object.isFrozen(o));
+
+            assert.exception(function () {
+                'use strict';
+                o.key2 = 'value2';
+            });
+
+            refute.equals(o.key2, 'value2');
+
+        });
+
+    });
+
+
 
 });

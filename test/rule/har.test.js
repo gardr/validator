@@ -2,22 +2,19 @@ var http = require('http');
 var xstatic = require('node-static');
 var hoek = require('hoek');
 
-var buster = require('buster-assertions');
+var buster = require('referee');
 var assert = buster.assert;
 var refute = buster.refute;
 
 var hook = require('../../lib/rule/hook/har.js');
+var hooksApi = require('../../lib/phantom/hooksApi.js');
 
 describe('HAR hook', function () {
 
     it('should store calls on probedata', function () {
 
         var result = {};
-        var api = {
-            getResultObject: function(){
-                return result;
-            }
-        };
+        var api = hooksApi({}, {}, result, 'har');
 
         hook.onLoadStarted();
         hook.onResourceRequested({id: 1});
@@ -26,7 +23,7 @@ describe('HAR hook', function () {
         hook.onPageOpen();
         hook.onBeforeExit(api);
 
-        var res = result.harInput.resources;
+        var res = result.har.input.resources;
 
         assert.equals(res.length, 1);
         assert(res[0].startReply);
@@ -41,9 +38,9 @@ var proxyquire = require('proxyquire');
 
 
 
-describe('HAR validator', function () {
+describe('HAR preprocessor', function () {
 
-    var validator = proxyquire('../../lib/rule/validator/har.js', {
+    var preprocessor = proxyquire('../../lib/rule/preprocessor/har.js', {
         '../../createHAR.js': function (options, harInput) {
             return harInput;
         }
@@ -52,16 +49,23 @@ describe('HAR validator', function () {
     it('should call createHar and output to report', function (done) {
 
         var harvested = {
-            harInput: {
-                resources: [],
-                startTime: null,
-                endTime: null
+            har: {
+                input: {
+                    resources: [],
+                    startTime: null,
+                    endTime: null
+                }
             }
         };
 
-        validator.validate(harvested, null, function () {
-            assert(harvested.HARFile);
-            assert.equals(0, harvested.harInput.resources.length);
+        var outputFn = function(context, key, value){
+            harvested[context] = harvested[context]||{};
+            harvested[context][key] = value;
+        };
+
+        preprocessor.preprocess(harvested, outputFn, function () {
+            assert(harvested.har.file);
+            assert.equals(0, harvested.har.input.resources.length);
             done();
         }, {});
     });
@@ -120,35 +124,44 @@ describe('HAR validator', function () {
         });
     }
 
-    var processResources = require('../../lib/processResources.js');
+    var processResources = require('../../lib/rule/preprocessor/processResources.js');
 
     it('should populate real sizes and collect contents', function(done){
         var harvested = {
-            harInput: {
-                resources: getInput()
+            har: {
+                input: {
+                    resources: getInput()
+                }
             }
+        };
+
+        var outputFn = function(context, key, value){
+            harvested[context] = harvested[context]||{};
+            harvested[context][key] = value;
         };
 
         var host = 'http://localhost:'+server.address().port;
         function get(key){
-            return harvested.rawFileData[host+key];
+            return harvested.har.rawFileData[host+key];
         }
 
-        processResources(harvested, null, function(){
+        processResources(harvested, outputFn, function(){
 
-            assert.isObject(harvested.harInput);
+            var data = harvested.har;
 
-            assert.isObject(harvested.rawFileData);
-            assert.equals(Object.keys(harvested.rawFileData).length, 5);
+            assert.isObject(data.input);
+
+            assert.isObject(data.rawFileData);
+            assert.equals(Object.keys(data.rawFileData).length, 5);
 
             refute(get('/addyn.js').compressed);
             assert(get('/addyn.js?gzip=true').compressed, 'gzip is on, so compressed flag should be true');
             assert.equals(get('/addyn.js?redirect=5&gzip=true').redirects.length, 6);
 
 
-            assert.isObject(harvested.rawFileDataSummary);
+            assert.isObject(data.rawFileDataSummary);
 
-            var total = harvested.rawFileDataSummary.total;
+            var total = data.rawFileDataSummary.total;
             assert.isObject(total);
             assert.equals(total.redirects, 6);
             assert.equals(total.rawRequests, 5);
@@ -156,7 +169,7 @@ describe('HAR validator', function () {
             assert.isNumber(total.size, 'size should be a number');
             assert.isNumber(total.fullSize, 'fullSize should be a number');
 
-            var tips = harvested.rawFileDataSummary.tips;
+            var tips = data.rawFileDataSummary.tips;
             assert.isNumber(tips.possibleCompressTarget,     'possibleCompressTarget should be a number');
             assert.isNumber(tips.possibleCompressImprovement,'possibleCompressImprovement should be a number');
             assert.isNumber(tips.possibleCompressWithOnlyScriptGzip,

@@ -1,4 +1,4 @@
-var buster = require('buster-assertions');
+var buster = require('referee');
 var assert = buster.assert;
 var refute = buster.refute;
 
@@ -9,12 +9,12 @@ describe('Log hook', function(){
 
     it('should store calls on resultobject', function(){
         var result = {logs: []};
-        var api = hooksApi({}, {}, result);
+        var api = hooksApi({}, {}, result, 'log');
 
         var message = 'msg'+Math.random()*Date.now();
 
         logHook.onConsoleMessage(message, null, null, api);
-        assert.equals(result.logs[0].message, message);
+        assert.equals(result.log.logs[0].message, message);
     });
 
 });
