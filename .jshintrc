@@ -33,10 +33,10 @@
     "unused"        : true,
     "strict"        : false,
     "trailing"      : true,
-    "maxparams"     : 3,
+    "maxparams"     : 5,
     "maxdepth"      : 4,
     "maxcomplexity" : 10,
-    "maxlen"        : 120,
+    "maxlen"        : false,
 
 
     "asi"           : false,

@@ -2,8 +2,12 @@
   "name": "gardr-validator",
   "version": "0.1.0",
   "main": "index.js",
+  "author": {
+    "name": "Sveinung Røsaker",
+    "email": "sveinung.rosaker@gmail.com"
+  },
   "scripts": {
-    "test": "./node_modules/.bin/mocha test/**/*.test.js --reporter list"
+    "test": "make test"
   },
   "repository": {
     "type": "git",
@@ -12,14 +16,18 @@
   "dependencies": {
     "phantomjs": "~1.9.2-2",
     "async": "~0.2.9",
-    "hoek": "~1.2.0",
-    "moment": "~2.4.0",
-    "request": "~2.29.0"
+    "hoek": "~1.4.1",
+    "moment": "~2.5.0",
+    "request": "~2.31.0"
   },
   "devDependencies": {
-    "mocha": "~1.15.0",
-    "proxyquire": "~0.5.1",
-    "node-static": "~0.7.2",
-    "referee": "~1.0.2"
+    "mocha": "~1.17.0",
+    "mocha-lcov-reporter": "0.0.1",
+    "proxyquire": "~0.5.2",
+    "node-static": "~0.7.3",
+    "referee": "~1.0.2",
+    "coveralls": "~2.6.1",
+    "istanbul": "~0.2.3",
+    "jshint": "~2.4.1"
   }
 }
