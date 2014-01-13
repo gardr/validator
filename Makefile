@@ -1,7 +1,6 @@
 REPORTER = spec
 test:
 	@$(MAKE) lint
-	@echo TRAVIS_JOB_ID $(TRAVIS_JOB_ID)
 	@NODE_ENV=test ./node_modules/.bin/mocha test/**/*.test.js -b --reporter $(REPORTER)
 
 lint:
@@ -10,11 +9,10 @@ lint:
 test-cov:
 	$(MAKE) lint
 	@NODE_ENV=test ./node_modules/.bin/istanbul cover \
-	./node_modules/mocha/bin/_mocha test/**/*.test.js -- -R spec
+	./node_modules/mocha/bin/_mocha test/**/*.test.js -- --reporter spec
 
 test-coveralls:
+	@echo TRAVIS_JOB_ID $(TRAVIS_JOB_ID)
 	@NODE_ENV=test ./node_modules/.bin/istanbul cover \
-	./node_modules/mocha/bin/_mocha test/**/*.test.js --report lcovonly -- -R spec && \
-		cat ./coverage/lcov.info | ./bin/coveralls.js --verbose
-
-.PHONY: test
+	./node_modules/mocha/bin/_mocha test/**/*.test.js --report lcovonly -R spec && \
+		cat ./coverage/lcov.info | ./node_modules/coveralls/bin/coveralls.js && rm -rf ./coverage
