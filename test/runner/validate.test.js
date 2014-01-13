@@ -50,12 +50,12 @@ describe('Validate', function () {
                 'data': 1
             },
             'common': {},
-            'filter': true
+            'filterOut': true
         };
         var validators = {
             'validatorFiles': [{
                 validate: function (harvested, report, next) {
-                    refute(harvested.filter);
+                    refute(harvested.filterOut, 'should only provide dependencies');
                     assert.equals(harvested.custom.data, data.custom.data);
                     next();
                 },
@@ -74,7 +74,7 @@ describe('Validate', function () {
                 'data': 1
             },
             'common': {},
-            'filter': true
+            'filterOut': true
         };
         var called = 0;
 
@@ -85,7 +85,7 @@ describe('Validate', function () {
                     called++;
                     output('custom', 'key', 'value');
                     output('key2', 'value2');
-                    refute(harvested.filter, 'should only provide dependencies');
+                    refute(harvested.filterOut, 'should only provide dependencies');
                     assert.equals(harvested.custom.data, data.custom.data);
                     next();
                 },
@@ -113,18 +113,20 @@ describe('Validate', function () {
             var o = validatorLib.filterDataByDependencies(input, [], 'test');
 
             assert(Object.isFrozen(o));
-
             assert.exception(function () {
                 'use strict';
                 o.key2 = 'value2';
             });
-
             refute.equals(o.key2, 'value2');
-
         });
 
+        it('should provide empty object if no data collected to avoid deep if expressions', function(){
+
+            var o = validatorLib.filterDataByDependencies({common: {}}, ['dep1', 'dep2'], 'test');
+
+            assert.isObject(o.dep1);
+            assert.isObject(o.dep2);
+            assert.isObject(o.common);
+        });
     });
-
-
-
 });

@@ -8,7 +8,7 @@ var logHook = require('../../lib/rule/hook/log.js');
 describe('Log hook', function(){
 
     it('should store calls on resultobject', function(){
-        var result = {logs: []};
+        var result = {};
         var api = hooksApi({}, {}, result, 'log');
 
         var message = 'msg'+Math.random()*Date.now();

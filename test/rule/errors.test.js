@@ -50,7 +50,7 @@ describe('Errors hook', function () {
 var validator = require('../../lib/rule/validator/errors.js');
 describe('Errors validator', function () {
 
-    it('should report usererrors as validations erros', function () {
+    it('should report usererrors as validations errors', function () {
 
         var called = 0;
         var report = {
@@ -60,20 +60,22 @@ describe('Errors validator', function () {
         };
 
         var harvested = {
-            systemErrors: [],
-            errors: []
+            'common': {
+                systemErrors: [],
+                errors: []
+            }
         };
 
         validator.validate(harvested, report, function(){});
         assert.equals(called, 0);
 
 
-        harvested.errors.push({message: 'some error'});
+        harvested.common.errors.push({message: 'some error'});
         validator.validate(harvested, report, function(){});
 
         assert.equals(called, 1);
 
-        harvested.systemErrors.push({message: 'another error'});
+        harvested.common.systemErrors.push({message: 'another error'});
         validator.validate(harvested, report, function(){});
 
         assert.equals(called, 3);

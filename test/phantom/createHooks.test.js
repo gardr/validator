@@ -9,7 +9,7 @@ describe('createHooks', function () {
 
     var baseApi = hooksApi({}, {}, {}, 'common');
 
-    it('should should populate page object with events', function () {
+    it('should should populate page object with keys (hooks/pageevents)', function () {
         var fixture = __dirname + '/fixtures/hook.js';
         var expectedLength = Object.keys(require(fixture)).length;
 
