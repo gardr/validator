@@ -1,19 +1,19 @@
 REPORTER = spec
+ISTANBUL = node_modules/istanbul/lib/cli.js
+MOCHA = node_modules/mocha/bin/mocha
+_MOCHA = node_modules/mocha/bin/_mocha
+JSHINT = node_modules/.bin/jshint
+COVERALLS = node_modules/coveralls/bin/coveralls.js
 TESTS_GLOB = test/**/*.test.js
+
 test:
 	@$(MAKE) lint
-	@NODE_ENV=test ./node_modules/.bin/mocha $(TESTS_GLOB) -b --reporter $(REPORTER)
-
+	@NODE_ENV=test $(MOCHA) $(TESTS_GLOB) -b --reporter $(REPORTER)
 lint:
-	./node_modules/.bin/jshint ./lib
-
+	$(JSHINT) ./lib
 test-cov:
 	$(MAKE) lint
-	@NODE_ENV=test ./node_modules/.bin/istanbul cover \
-	./node_modules/.bin/_mocha $(TESTS_GLOB) -- -R $(REPORTER)
-
+	@NODE_ENV=test $(ISTANBUL) cover $(_MOCHA) $(TESTS_GLOB) -- -R $(REPORTER)
 test-coveralls:
-	@echo TRAVIS_JOB_ID $(TRAVIS_JOB_ID)
-	@NODE_ENV=test ./node_modules/.bin/istanbul cover \
-		./node_modules/.bin/_mocha $(TESTS_GLOB) --report lcovonly -- -R $(REPORTER) && \
-		cat ./coverage/lcov.info | ./node_modules/.bin/coveralls && rm -rf ./coverage
+	@NODE_ENV=test $(ISTANBUL) cover $(_MOCHA) $(TESTS_GLOB) --report lcovonly -- -R $(REPORTER) && cat ./coverage/lcov.info | $(COVERALLS)
+.PHONY: all test clean	
