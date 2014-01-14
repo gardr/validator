@@ -4,49 +4,28 @@ var refute = buster.refute;
 
 var hook = require('../../lib/rule/hook/errors.js');
 
-/*
+
 describe('Errors hook', function () {
 
-    it('should inject error probe in gardr frame', function () {
-        var calls = 0;
-        var _window = {
-            'top': {
-                __errors: []
-            },
-            'onerror': function () {
-                calls++;
-            }
-        };
+    it('should report error', function (done) {
+
+        var message = 'msg';
+        var trace = [{line: 1, file: 2, 'function': 3}];
         var api = {
-            'switchToIframe': function () {
-                calls++;
-            },
-            'evaluate': function (fn) {
-                global.window = _window;
-                calls++;
-                fn();
-                global.window = null;
+            setPush: function(key, entry){
+                assert(key, 'errors');
+                assert.equals(entry.message, message);
+                assert.equals(entry.trace[0].sourceURL, trace[0].file);
+                done();
             }
         };
 
-        hook.onNavigationRequested('invalid', null, null, null, api);
-
-        assert.equals(calls, 0);
-
-        var url = 'http://valid.no/page.html?param=param#GARDR_' + Math.random();
-        hook.onNavigationRequested(url, null, null, null, api);
-
-        assert.equals(calls, 2);
-
-        _window.onerror('some error', 'url', 'lineNumber');
-
-        assert.equals(calls, 3);
-        assert.equals(_window.top.__errors.length, 1);
-
+        var result = hook.onError(message, trace, api);
+        assert(result, 'hook should return true');
     });
 
 });
-*/
+
 var validator = require('../../lib/rule/validator/errors.js');
 describe('Errors validator', function () {
 

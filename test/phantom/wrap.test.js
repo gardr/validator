@@ -13,7 +13,11 @@ describe('Wrap', function(){
             calls++;
         }
 
-        global.window = {'top': {}, 'target': call};
+        function call2(){
+            calls++;
+        }
+
+        global.window = {'top': {}, 'target': call, 'target2': {'sub1': call2}};
 
         var key = wrap.wrapEvaluate({
             name: ['target']
@@ -30,7 +34,15 @@ describe('Wrap', function(){
         global.window.target('huzzla');
         assert.equals(calls, 2);
 
-        assert.equals(calls, global.window.top[key].length);
+
+        key = wrap.wrapEvaluate({
+            name: ['target2', 'sub1']
+        });
+        assert(key);
+
+        global.window.target2.sub1('huzzla');
+        refute.equals(global.window.target2.sub1, call2);
+        assert.equals(calls, 3);
 
         global.window = null;
     });
@@ -88,5 +100,38 @@ describe('Wrap', function(){
 
     });
 
+
+    it('createWrap should run evaluate on the page object', function(done){
+
+        var evalCalls = 0;
+        var page = {
+            switchToMainFrame: function(){},
+            switchToFrame: function(){},
+            evaluate: function(fn, key){
+                evalCalls++;
+                if (evalCalls === 1){
+                    return key.name;
+                }
+                if (evalCalls === 2){
+                    setTimeout(done, 0);
+                    return fn(key);
+                }
+            }
+        };
+
+        global.window = {
+            top: {dummy: 1}
+        };
+
+        var wrapper = wrap.createWrap(page);
+        var fn      = wrapper('dummy', function(){});
+        assert.equals(evalCalls, 1, 'should call evaluate');
+
+        var result = fn('dummy');
+
+        assert.equals(result, global.window.top.dummy);
+
+        global.window = null;
+    });
 
 });

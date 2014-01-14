@@ -15,6 +15,32 @@ describe('Validate', function () {
         'val2': VALIDATOR_PATH_2
     });
 
+    it('should throw when missing validators', function(){
+        assert.exception(function(){
+            validate();
+        });
+
+
+        assert.exception(function(){
+            validate({}, {}, function(){});
+        });
+    });
+
+    it('should throw on missing validator', function(){
+        var invalidFiles = ['INVALID_PATH'];
+
+        assert.exception(function(){
+            validate({}, {validatorFiles: invalidFiles}, function(){});
+        });
+    });
+
+    it('should not require objects, but return error on missing validate function', function(done){
+        validate({}, {validatorFiles: [{}]}, function(err){
+            assert(err);
+            done();
+        });
+    })
+
     it('should run a set of validators on probed data', function (done) {
 
         assert.equals(files.length, 2);
@@ -103,24 +129,136 @@ describe('Validate', function () {
 
     });
 
+    it('should throw if trying to output on non-key-dependcies', function(){
+
+        var data = {
+            'common': {}
+        };
+
+        var options = {
+            'validatorFiles': [],
+            'preprocessorFiles': [{
+                preprocess: function (harvested, output, next) {
+                    output('custom', 'key', 'value');
+                    next();
+                },
+                dependencies: [],
+                name: 'preprocessY'
+            }]
+        };
+
+        assert.exception(function(){
+            validate(data, options, function(){});
+        });
+
+
+
+    });
+
+    describe('Reporthelpers', function(){
+        var reportKeys = ['info', 'debug', 'warn', 'error'];
+        it('should provide report fn', function(){
+            var result = {};
+            var reporter = validatorLib.createReportHelper(result)('test');
+
+            reportKeys.forEach(function(key){
+                reporter[key](key+'Message');
+            });
+
+            var _result = reporter.getResult();
+            assert.equals(_result, result);
+
+            reportKeys.forEach(function(key){
+                assert(_result[key]);
+            });
+
+        });
+
+        function createEntry(a, b){
+            return {
+                file: a||'filename1',
+                sourceURL: b||'sourceurl1',
+                line: 1
+            };
+        }
+
+        it('should fix trace data and remove duplicates', function(){
+            var result = {};
+            var reporter = validatorLib.createReportHelper(result)('test');
+
+            var longSourceUrl = 'very_very_very_long_very_long_very_long_url_and?some_arg';
+            var trunc = 'very_very_very_long_very_';
+            var trace = [
+                createEntry(),
+                createEntry('a'),
+                createEntry(),
+                createEntry('b', longSourceUrl),
+                createEntry(),
+                createEntry(),
+                createEntry(),
+                createEntry()
+            ];
+            reporter.info('msg', {trace: trace});
+            var _result = reporter.getResult();
+            //console.log(_result.info[0].data.trace);
+            assert.equals(_result.info.length, 1);
+            assert.equals(_result.info[0].data.trace.length, 3);
+            refute.equals(_result.info[0].data.trace[2].file, 'b');
+            assert.equals(_result.info[0].data.trace[2].file, trunc);
+        });
+
+        it('sending in a trace object should wrap in array', function(){
+            var reporter = validatorLib.createReportHelper({})('test');
+
+            reporter.info('msg', {trace: {sourceURL: '....'}});
+
+            assert(reporter.getResult().info[0].data.trace.length, 1);
+
+        });
+    });
+
     describe('filterDataByDependencies', function () {
         it('should throw if attempts to change current object', function () {
 
             var input = {
-                common: {}
+                common: {deep: {inner: {}}}
             };
 
-            var o = validatorLib.filterDataByDependencies(input, [], 'test');
+            var o = validatorLib.filterDataByDependencies(input, ['dep'], 'test');
 
             assert(Object.isFrozen(o));
             assert.exception(function () {
                 'use strict';
                 o.key2 = 'value2';
+                o.common.deep.inner.key3 = 'value3';
             });
             refute.equals(o.key2, 'value2');
+            refute.equals(o.common.deep.inner.key3, 'value3');
         });
 
-        it('should provide empty object if no data collected to avoid deep if expressions', function(){
+        it('deepFreeze should not try to freeze nonobjects', function(){
+            var i = 123;
+            var result = validatorLib.deepFreeze(i);
+            assert.equals(result, i);
+        });
+
+        it('should default to common if missing dependencies', function(){
+            var o = validatorLib.filterDataByDependencies({common: {}}, null, 'test');
+            assert(Object.isFrozen(o));
+            assert(o.common);
+        });
+
+        it('should emit warnings when missing dependency data', function(done){
+            var _warn = global.console.warn;
+            global.console.warn = function(){
+                global.console.warn = _warn;
+                assert(true);
+                done();
+            };
+            validatorLib.filterDataByDependencies({}, ['missing'], 'not_named_test');
+        });
+
+        it('should provide empty object if no data collected to avoid deep if-expressions', function(){
 
             var o = validatorLib.filterDataByDependencies({common: {}}, ['dep1', 'dep2'], 'test');
 
