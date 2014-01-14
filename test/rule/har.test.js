@@ -51,7 +51,7 @@ describe('HAR preprocessor', function () {
         var harvested = {
             har: {
                 input: {
-                    resources: [],
+                    resources: [{request: {url: 'file://'}}],
                     startTime: null,
                     endTime: null
                 }
@@ -65,7 +65,7 @@ describe('HAR preprocessor', function () {
 
         preprocessor.preprocess(harvested, outputFn, function () {
             assert(harvested.har.file);
-            assert.equals(0, harvested.har.input.resources.length);
+            assert.equals(0, harvested.har.file.resources.length);
             done();
         }, {});
     });
