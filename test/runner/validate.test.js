@@ -238,8 +238,10 @@ describe('Validate', function () {
 
         it('deepFreeze should not try to freeze nonobjects', function(){
             var i = 123;
-            var result = validatorLib.deepFreeze(i);
-            assert.equals(result, i);
+            assert.exception(function(){
+                validatorLib.deepFreeze(i);
+            });
+
         });
 
         it('should default to common if missing dependencies', function(){
