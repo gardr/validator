@@ -28,7 +28,7 @@
     "proxyquire": "~0.5.2",
     "node-static": "~0.7.3",
     "referee": "~1.0.2",
-    "coveralls": "~2.6.1",
+    "coveralls": "~2.8.0",
     "istanbul": "~0.2.3",
     "jshint": "~2.4.1"
   }
