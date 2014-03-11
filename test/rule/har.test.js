@@ -35,9 +35,6 @@ describe('HAR hook', function () {
 
 var proxyquire = require('proxyquire');
 
-
-
-
 describe('HAR preprocessor', function () {
 
     var preprocessor = proxyquire('../../lib/rule/preprocessor/har.js', {
@@ -69,8 +66,6 @@ describe('HAR preprocessor', function () {
             done();
         }, {});
     });
-
-
 
     var server;
     before(function(){
