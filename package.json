@@ -8,8 +8,7 @@
   },
   "scripts": {
     "test": "make test",
-    "prepublish": "make build-gardr-client",
-    "postinstall": "make build-gardr-client"
+    "prepublish": "make build-gardr-client"
   },
   "repository": {
     "type": "git",

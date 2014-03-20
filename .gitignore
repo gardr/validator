@@ -15,5 +15,3 @@ node_modules
 npm-debug.log
 node_modules
 coverage
-
-lib/phantom/resources/built
