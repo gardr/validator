@@ -7,7 +7,8 @@
     "email": "sveinung.rosaker@gmail.com"
   },
   "scripts": {
-    "test": "make test"
+    "test": "make test",
+    "prepublish": "make build-gardr-client"
   },
   "repository": {
     "type": "git",
