@@ -1,0 +1,472 @@
+{
+    "touch": {
+        "actionTime": 1395307918397,
+        "touchEventData": {
+            "swipeLeft": {
+                "touchend": [
+                    {
+                        "defaultPrevented": false,
+                        "returnValue": true,
+                        "t": 1395307922516,
+                        "x": 0,
+                        "y": 0
+            }
+          ],
+                "touchmove": [
+                    {
+                        "defaultPrevented": false,
+                        "returnValue": true,
+                        "t": 1395307921465,
+                        "x": 44,
+                        "y": 100
+            },
+                    {
+                        "defaultPrevented": false,
+                        "returnValue": true,
+                        "t": 1395307921559,
+                        "x": 65,
+                        "y": 100
+            },
+                    {
+                        "defaultPrevented": false,
+                        "returnValue": true,
+                        "t": 1395307921572,
+                        "x": 86,
+                        "y": 100
+            },
+                    {
+                        "defaultPrevented": false,
+                        "returnValue": true,
+                        "t": 1395307921664,
+                        "x": 107,
+                        "y": 100
+            },
+                    {
+                        "defaultPrevented": false,
+                        "returnValue": true,
+                        "t": 1395307921677,
+                        "x": 129,
+                        "y": 100
+            },
+                    {
+                        "defaultPrevented": false,
+                        "returnValue": true,
+                        "t": 1395307921769,
+                        "x": 150,
+                        "y": 100
+            },
+                    {
+                        "defaultPrevented": false,
+                        "returnValue": true,
+                        "t": 1395307921782,
+                        "x": 171,
+                        "y": 100
+            },
+                    {
+                        "defaultPrevented": false,
+                        "returnValue": true,
+                        "t": 1395307921869,
+                        "x": 192,
+                        "y": 100
+            },
+                    {
+                        "defaultPrevented": false,
+                        "returnValue": true,
+                        "t": 1395307921882,
+                        "x": 213,
+                        "y": 100
+            },
+                    {
+                        "defaultPrevented": false,
+                        "returnValue": true,
+                        "t": 1395307921974,
+                        "x": 234,
+                        "y": 100
+            },
+                    {
+                        "defaultPrevented": false,
+                        "returnValue": true,
+                        "t": 1395307921987,
+                        "x": 255,
+                        "y": 100
+            },
+                    {
+                        "defaultPrevented": false,
+                        "returnValue": true,
+                        "t": 1395307922074,
+                        "x": 276,
+                        "y": 100
+            },
+                    {
+                        "defaultPrevented": false,
+                        "returnValue": true,
+                        "t": 1395307922087,
+                        "x": 297,
+                        "y": 100
+            },
+                    {
+                        "defaultPrevented": false,
+                        "returnValue": true,
+                        "t": 1395307922177,
+                        "x": 318,
+                        "y": 100
+            },
+                    {
+                        "defaultPrevented": false,
+                        "returnValue": true,
+                        "t": 1395307922190,
+                        "x": 340,
+                        "y": 100
+            },
+                    {
+                        "defaultPrevented": false,
+                        "returnValue": true,
+                        "t": 1395307922285,
+                        "x": 361,
+                        "y": 100
+            },
+                    {
+                        "defaultPrevented": false,
+                        "returnValue": true,
+                        "t": 1395307922299,
+                        "x": 382,
+                        "y": 100
+            },
+                    {
+                        "defaultPrevented": false,
+                        "returnValue": true,
+                        "t": 1395307922392,
+                        "x": 403,
+                        "y": 100
+            },
+                    {
+                        "defaultPrevented": false,
+                        "returnValue": true,
+                        "t": 1395307922405,
+                        "x": 424,
+                        "y": 100
+            }
+          ],
+                "touchstart": [
+                    {
+                        "defaultPrevented": false,
+                        "returnValue": true,
+                        "t": 1395307921452,
+                        "x": 23,
+                        "y": 100
+            }
+          ]
+            },
+            "swipeRight": {
+                "touchend": [
+                    {
+                        "defaultPrevented": false,
+                        "returnValue": true,
+                        "t": 1395307921346,
+                        "x": 0,
+                        "y": 0
+            }
+          ],
+                "touchmove": [
+                    {
+                        "defaultPrevented": true,
+                        "returnValue": false,
+                        "t": 1395307919915,
+                        "x": 424,
+                        "y": 100
+            },
+                    {
+                        "defaultPrevented": true,
+                        "returnValue": false,
+                        "t": 1395307920068,
+                        "x": 403,
+                        "y": 100
+            },
+                    {
+                        "defaultPrevented": true,
+                        "returnValue": false,
+                        "t": 1395307920081,
+                        "x": 382,
+                        "y": 100
+            },
+                    {
+                        "defaultPrevented": false,
+                        "returnValue": true,
+                        "t": 1395307920239,
+                        "x": 361,
+                        "y": 100
+            },
+                    {
+                        "defaultPrevented": false,
+                        "returnValue": true,
+                        "t": 1395307920252,
+                        "x": 340,
+                        "y": 100
+            },
+                    {
+                        "defaultPrevented": false,
+                        "returnValue": true,
+                        "t": 1395307920413,
+                        "x": 318,
+                        "y": 100
+            },
+                    {
+                        "defaultPrevented": false,
+                        "returnValue": true,
+                        "t": 1395307920426,
+                        "x": 297,
+                        "y": 100
+            },
+                    {
+                        "defaultPrevented": false,
+                        "returnValue": true,
+                        "t": 1395307920607,
+                        "x": 276,
+                        "y": 100
+            },
+                    {
+                        "defaultPrevented": false,
+                        "returnValue": true,
+                        "t": 1395307920620,
+                        "x": 255,
+                        "y": 100
+            },
+                    {
+                        "defaultPrevented": false,
+                        "returnValue": true,
+                        "t": 1395307920802,
+                        "x": 234,
+                        "y": 100
+            },
+                    {
+                        "defaultPrevented": false,
+                        "returnValue": true,
+                        "t": 1395307920815,
+                        "x": 213,
+                        "y": 100
+            },
+                    {
+                        "defaultPrevented": false,
+                        "returnValue": true,
+                        "t": 1395307920909,
+                        "x": 192,
+                        "y": 100
+            },
+                    {
+                        "defaultPrevented": false,
+                        "returnValue": true,
+                        "t": 1395307920922,
+                        "x": 171,
+                        "y": 100
+            },
+                    {
+                        "defaultPrevented": false,
+                        "returnValue": true,
+                        "t": 1395307921032,
+                        "x": 150,
+                        "y": 100
+            },
+                    {
+                        "defaultPrevented": false,
+                        "returnValue": true,
+                        "t": 1395307921045,
+                        "x": 129,
+                        "y": 100
+            },
+                    {
+                        "defaultPrevented": false,
+                        "returnValue": true,
+                        "t": 1395307921140,
+                        "x": 107,
+                        "y": 100
+            },
+                    {
+                        "defaultPrevented": false,
+                        "returnValue": true,
+                        "t": 1395307921153,
+                        "x": 86,
+                        "y": 100
+            },
+                    {
+                        "defaultPrevented": false,
+                        "returnValue": true,
+                        "t": 1395307921245,
+                        "x": 65,
+                        "y": 100
+            },
+                    {
+                        "defaultPrevented": false,
+                        "returnValue": true,
+                        "t": 1395307921258,
+                        "x": 44,
+                        "y": 100
+            }
+          ],
+                "touchstart": [
+                    {
+                        "defaultPrevented": false,
+                        "returnValue": true,
+                        "t": 1395307919901,
+                        "x": 445,
+                        "y": 100
+            }
+          ]
+            },
+            "swipeTop": {
+                "touchend": [
+                    {
+                        "defaultPrevented": true,
+                        "returnValue": false,
+                        "t": 1395307920237,
+                        "x": 0,
+                        "y": 0
+            }
+          ],
+                "touchmove": [
+                    {
+                        "defaultPrevented": true,
+                        "returnValue": false,
+                        "t": 1395307918411,
+                        "x": 235,
+                        "y": 172
+            },
+                    {
+                        "defaultPrevented": true,
+                        "returnValue": false,
+                        "t": 1395307918579,
+                        "x": 235,
+                        "y": 164
+            },
+                    {
+                        "defaultPrevented": true,
+                        "returnValue": false,
+                        "t": 1395307918592,
+                        "x": 234,
+                        "y": 156
+            },
+                    {
+                        "defaultPrevented": true,
+                        "returnValue": false,
+                        "t": 1395307918774,
+                        "x": 233,
+                        "y": 148
+            },
+                    {
+                        "defaultPrevented": true,
+                        "returnValue": false,
+                        "t": 1395307918787,
+                        "x": 233,
+                        "y": 140
+            },
+                    {
+                        "defaultPrevented": true,
+                        "returnValue": false,
+                        "t": 1395307918953,
+                        "x": 232,
+                        "y": 132
+            },
+                    {
+                        "defaultPrevented": true,
+                        "returnValue": false,
+                        "t": 1395307918966,
+                        "x": 231,
+                        "y": 124
+            },
+                    {
+                        "defaultPrevented": true,
+                        "returnValue": false,
+                        "t": 1395307919127,
+                        "x": 230,
+                        "y": 116
+            },
+                    {
+                        "defaultPrevented": true,
+                        "returnValue": false,
+                        "t": 1395307919140,
+                        "x": 230,
+                        "y": 108
+            },
+                    {
+                        "defaultPrevented": true,
+                        "returnValue": false,
+                        "t": 1395307919313,
+                        "x": 229,
+                        "y": 100
+            },
+                    {
+                        "defaultPrevented": true,
+                        "returnValue": false,
+                        "t": 1395307919326,
+                        "x": 228,
+                        "y": 92
+            },
+                    {
+                        "defaultPrevented": true,
+                        "returnValue": false,
+                        "t": 1395307919507,
+                        "x": 228,
+                        "y": 84
+            },
+                    {
+                        "defaultPrevented": true,
+                        "returnValue": false,
+                        "t": 1395307919520,
+                        "x": 227,
+                        "y": 76
+            },
+                    {
+                        "defaultPrevented": true,
+                        "returnValue": false,
+                        "t": 1395307919725,
+                        "x": 226,
+                        "y": 68
+            },
+                    {
+                        "defaultPrevented": true,
+                        "returnValue": false,
+                        "t": 1395307919738,
+                        "x": 226,
+                        "y": 60
+            },
+                    {
+                        "defaultPrevented": true,
+                        "returnValue": false,
+                        "t": 1395307919893,
+                        "x": 225,
+                        "y": 52
+            },
+                    {
+                        "defaultPrevented": true,
+                        "returnValue": false,
+                        "t": 1395307919906,
+                        "x": 224,
+                        "y": 44
+            },
+                    {
+                        "defaultPrevented": true,
+                        "returnValue": false,
+                        "t": 1395307920068,
+                        "x": 223,
+                        "y": 36
+            },
+                    {
+                        "defaultPrevented": true,
+                        "returnValue": false,
+                        "t": 1395307920081,
+                        "x": 223,
+                        "y": 28
+            }
+          ],
+                "touchstart": [
+                    {
+                        "defaultPrevented": false,
+                        "returnValue": true,
+                        "t": 1395307918398,
+                        "x": 236,
+                        "y": 180
+            }
+          ]
+            }
+        }
+    }
+}

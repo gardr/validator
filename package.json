@@ -25,7 +25,8 @@
     "estraverse": "^1.5.0",
     "css-parse": "^1.7.0",
     "gardr": "~0.5.17-SNAPSHOT",
-    "browserify": "^3.32.1"
+    "browserify": "^3.33.0",
+    "mock-phantom-touch-events": "0.0.2"
   },
   "devDependencies": {
     "mocha": "~1.17.0",
