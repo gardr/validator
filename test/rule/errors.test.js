@@ -2,6 +2,7 @@ var buster = require('referee');
 var assert = buster.assert;
 var refute = buster.refute;
 
+var config = require('../../config/config.js');
 var hook = require('../../lib/rule/hook/errors.js');
 
 
@@ -45,17 +46,17 @@ describe('Errors validator', function () {
             }
         };
 
-        validator.validate(harvested, report, function(){});
+        validator.validate(harvested, report, function(){}, config);
         assert.equals(called, 0);
 
 
         harvested.common.errors.push({message: 'some error'});
-        validator.validate(harvested, report, function(){});
+        validator.validate(harvested, report, function(){}, config);
 
         assert.equals(called, 1);
 
         harvested.common.systemErrors.push({message: 'another error'});
-        validator.validate(harvested, report, function(){});
+        validator.validate(harvested, report, function(){}, config);
 
         assert.equals(called, 3);
     });

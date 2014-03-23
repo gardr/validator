@@ -1,3 +1,4 @@
+var config = require('../../config/config.js');
 var validate = require('../../lib/validate.js');
 
 function getTraceObject(name) {
@@ -17,5 +18,7 @@ function createReporter() {
 
 module.exports = {
     getTraceObject: getTraceObject,
-    createReporter: createReporter
+    createReporter: createReporter,
+    config: config
+
 };

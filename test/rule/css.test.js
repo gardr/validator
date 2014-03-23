@@ -2,6 +2,8 @@ var referee = require('referee');
 var assert = referee.assert;
 //var refute = referee.refute;
 
+var config = require('../../config/config.js');
+var defaults = config.config.css;
 var cssHOOK = require('../../lib/rule/hook/css.js');
 
 describe('CSS hook', function () {
@@ -13,8 +15,8 @@ describe('CSS hook', function () {
             'set' : function(key, value){
                 result[key] = value;
             },
-            'evaluate' : function(fn){
-                return fn();
+            'evaluate' : function(fn, arg1){
+                return fn(arg1);
             },
             'switchToIframe' : function(){
 
@@ -34,7 +36,7 @@ describe('CSS hook', function () {
             }
         };
 
-        cssHOOK.onBeforeExit(api);
+        cssHOOK.onBeforeExit(api, defaults);
 
         global.document = null;
 
@@ -75,7 +77,7 @@ describe('CSS validator', function(){
             assert.equals(result.error.length, 3, 'should filter tags with usages except margin/padding');
 
             done();
-        });
+        }, config);
     });
 
 });

@@ -2,6 +2,7 @@ var referee = require('referee');
 var assert = referee.assert;
 var refute = referee.refute;
 
+var defaults = require('../../config/config.js').config.screenshots;
 var hook = require('../../lib/rule/hook/screenshots.js');
 var help = require('../lib/validateHelpers.js');
 
@@ -25,16 +26,16 @@ describe('screenshots', function () {
                 assert.equals(called, 1);
                 assert.equals(path.indexOf('/a/1x2_'), 0);
                 setTimeout(function(){
-                    assert.equals(called, 2);
+                    assert.equals(called, 2, 'should have been called 2 times');
                     done();
-                }, 1);
+                }, defaults.ms);
 
             }
         };
 
 
         global.window = {
-            setTimeout: function (fn, time) {
+            setTimeout: function (fn) {
                 called++;
                 if (called === 1){
                     fn();
@@ -42,20 +43,10 @@ describe('screenshots', function () {
             }
         };
 
-        hook.onPageOpen(api);
+        hook.onPageOpen(api, defaults);
 
         global.window = 0;
     });
-
-
-    describe('validator', function(){
-
-        it.skip('is missing',function(){
-
-        });
-
-    });
-
 });
 
 
