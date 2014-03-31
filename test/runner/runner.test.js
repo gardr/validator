@@ -111,10 +111,12 @@ describe('Runner (phantomJs)', function () {
 
     describe('full tests', function () {
         var runner = require('../../lib/index.js');
+        var os = require('os');
 
         it('should run with default config', function (done) {
             var options = {
-                'pageRunTime': 25
+                'pageRunTime': 25,
+                'outputDirectory': os.tmpDir()
             };
             runner.run(options, function (err, result) {
                 if (err) {
@@ -130,7 +132,8 @@ describe('Runner (phantomJs)', function () {
             this.timeout(3000);
             var options = {
                 'instrument': ['log'],
-                'pageRunTime': 25
+                'pageRunTime': 25,
+                'outputDirectory': os.tmpDir()
             };
             runner.run(options, function (err, result) {
                 if (err) {
@@ -162,7 +165,8 @@ describe('Runner (phantomJs)', function () {
                     'common',
                     'log'
                 ],
-                'pageRunTime': 100
+                'pageRunTime': 100,
+                'outputDirectory': os.tmpDir()
             };
             runner.run(options, function (err, result) {
                 if (err) {

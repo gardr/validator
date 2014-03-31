@@ -16,6 +16,83 @@ describe('Touch/Swipe intrumentation', function () {
             assert(HOOKS.indexOf(hookKey) !== -1, hookKey + ' is not Valid');
         });
     });
+
+    it('should trigger swipes', function(done){
+        var called = 0;
+        global.document = {
+            getElementById: function(){
+                return {
+                    querySelector: function(){
+                        return 'fakeElement';
+                    }
+                };
+            }
+        };
+        global.window = {
+            document: global.document
+        };
+
+        var api = {
+            set: function(key, value){
+                if (key !== 'touchEventData'){
+                    return;
+                }
+                assert.equals(Object.keys(value).length, 4);
+                assert.equals(value.swipeTop.touchstart.length, 1);
+
+                global.window = null;
+                global.document = null;
+
+                done();
+
+            },
+            switchToIframe: function(){
+
+            },
+            injectLocalJs: function(){
+                window.swipeTop = handler;
+                window.swipeRight = handler;
+                window.swipeLeft = handler;
+                window.swipeBottom = handler;
+            },
+            evaluate: function(fn, arg1, arg2){
+                return fn(arg1, arg2);
+            }
+        };
+
+
+        function handler(fakeElement, time, frames, getEvent){
+            assert.equals(fakeElement, 'fakeElement');
+            getEvent({type: 'touchstart', pageX: 0, pageY: 1, returnValue: true, defaultPrevented: false});
+            getEvent({type: 'touchmove', pageX: 5, pageY: 1, returnValue: true, defaultPrevented: false});
+            getEvent({type: 'touchend', pageX: 10, pageY: 2, returnValue: true, defaultPrevented: false});
+            called++;
+        }
+        var config = {
+            swipeTop: true,
+            swipeLeft: true,
+            swipeBottom: true,
+            swipeRight: true,
+            swipeTime: 1,
+            frames: 0,
+            delayBeforeNext: 1
+        };
+
+        intrumentation.onHalfTime(api, config);
+
+
+
+        setTimeout(function(){
+            assert.equals(called, 4);
+
+            intrumentation.onBeforeExit(api, config);
+
+
+
+        }, 10);
+
+
+    });
 });
 
 describe('Touch/Swipe validator', function () {

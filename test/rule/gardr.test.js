@@ -1,5 +1,6 @@
 var referee = require('referee');
 var assert = referee.assert;
+var help = require('../lib/validateHelpers.js');
 
 var instrumentation = require('../../lib/rule/instrument/gardr.js');
 
@@ -41,9 +42,76 @@ describe('Gardr instrumentation', function () {
         assert.equals(arg, JSON.stringify(options));
     });
 
+    it('should collect css and dom data', function(){
+        global.document = {
+            createElement: function(){
+                return {
+                    appendChild: function(){}
+                };
+            },
+            querySelectorAll: function(){
+                return [{
+                    cloneNode: function(){},
+                    innerHTML: '<div></div>'
+                }];
+            },
+            querySelector: function(){
+                return {
+                    onclick: function(){}
+                };
+            },
+            getElementById: function(){
+                return {
+                    querySelector : function(){
+                        return {
+
+                        };
+                    }
+                };
+            }
+        };
+        global.window = {
+            getComputedStyle: function(){
+                return {
+                    getPropertyValue : function(){
+                        return {
+
+                        };
+                    }
+                };
+            },
+            __manager: {
+                _getById: function(){
+                    return {
+                        input: 'a',
+                        getData: function(){
+                            return 'b';
+                        }
+                    };
+                }
+            }
+        };
+
+        var called = 0;
+        var api = {
+            set: function(){
+                called++;
+            },
+            switchToIframe: function(){},
+            switchToMainFrame: function(){},
+            evaluate: function(fn, arg){
+                return fn(arg);
+            }
+        };
+
+        instrumentation.onBeforeExit(api, help.config.config.gardr);
+
+        assert.equals(called, 2);
+
+    });
+
 });
 
-var help = require('../lib/validateHelpers.js');
 
 describe('Gardr validator', function () {
 

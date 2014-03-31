@@ -36,6 +36,40 @@ describe('timers instrumentation', function(){
         });
     });
 
+    it('should wrap timeouts', function(done){
+
+        var called = 0;
+        var wrappedCalled = 0;
+        var wrappedResolve = 0;
+        var api = {
+            switchToIframe: function(){},
+            wrap: function(){
+                wrappedCalled++;
+                return function(){
+                    wrappedResolve++;
+                };
+            },
+            set: function(){
+                called ++;
+                if (called === 3){
+                    assert.equals(wrappedCalled, 4);
+                    assert.equals(wrappedResolve, 4);
+                    done();
+                }
+            }
+        };
+
+        var ignoreResponse = {};
+        var response2 = {stage: 'end', url: 'iframe.html'};
+
+        instrumentation.onResourceReceived(ignoreResponse, api);
+
+        instrumentation.onResourceReceived(response2, api, {nameToTriggerWrap: 'iframe.html'});
+
+        instrumentation.onBeforeExit(api);
+
+    });
+
 });
 
 describe('timers validator', function () {

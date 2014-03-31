@@ -115,11 +115,11 @@ describe('jQuery validator', function () {
     it('should report error when version doesnt match latest', function (done) {
         var report = help.createReporter.call(this);
         var harvested = {
-            jquery: { version: "1.10.1" }
+            jquery: { version: '1.10.1' }
         };
 
         function output(key, value){
-            harvested['jquery'][key] = value;
+            harvested.jquery[key] = value;
         }
 
         jqueryPreprocessor.preprocess(harvested, output, function(){
@@ -131,5 +131,23 @@ describe('jQuery validator', function () {
         }, {});
 
     });
-
 });
+
+
+var getLatestJquery = require('../../lib/rule/lib/getLatestJquery.js');
+
+describe('getLatestJquery', function () {
+
+    it('should fetch tags from github repo tags', function(done){
+        this.timeout(5000);
+        getLatestJquery.getLatest(function(tags){
+            getLatestJquery.getLatest(function(tagsCached){
+                assert(tags === tagsCached);
+                assert.equals(tags.length, 2);
+                done();
+            });
+        });
+
+    });
+});
+

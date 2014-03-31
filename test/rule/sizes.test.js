@@ -3,43 +3,147 @@ var assert = referee.assert;
 //var refute = referee.refute;
 var help = require('../lib/validateHelpers.js');
 
-describe('Sizes validator', function () {
+function getFakeRequest(type) {
+    return {
+        aproxCompressedSize: 2165,
+        aproxCompressionPossible: 6213,
+        base64Content: '',
+        bodyLength: 2165,
+        compressed: true,
+        contentType: type || 'application/x-javascript',
+        redirects: [],
+        unzippedSize: 8378,
+        url: 'http://...'
+    };
+}
 
-    it('should report on external files', function (done) {
-        var harvested = {
-            'har': {
-                'rawFileDataSummary': {
-                    'total': {
-                        'redirects': 0,
-                        'rawRequests': 4,
-                        'requestErrors': 0,
-                        'requests': 4,
-                        'size': 200,
-                        'fullSize': 200
-                    },
-                    'tips': {
-                        'possibleCompressTarget': 81960,
-                        'possibleCompressImprovement': 193109,
-                        'possibleCompressWithOnlyScriptGzip': 81960
-                    },
-                    'typed': {
-                        'types': {
-                            'script': {
-                                'http://localhost:8000/fixtures/script1.js': {},
-                                'http://localhost:8000/fixtures/script2.js': {},
-                                'http://localhost:8000/fixtures/script3.js': {}
+function getHarvestedData() {
+    return {
+        'format': {
+            id: 'test'
+        },
+        'har': {
+            'rawFileDataSummary': {
+                'total': {
+                    'redirects': 0,
+                    'rawRequests': 4,
+                    'requestErrors': 0,
+                    'requests': 4,
+                    'size': 200,
+                    'fullSize': 200
+                },
+                'tips': {
+                    'possibleCompressTarget': 81960,
+                    'possibleCompressImprovement': 193109,
+                    'possibleCompressWithOnlyScriptGzip': 81960
+                },
+                'typed': {
+                    'summary': {
+                        'script': {
+                            'total': {
+                                'redirects': 1,
+                                'rawRequests': 9,
+                                'requestErrors': 0,
+                                'requests': 10,
+                                'size': 75662,
+                                'fullSize': 203569
                             },
-                            'style': {
-                                'http://localhost:8000/fixtures/style.css': {}
+                            'tips': {
+                                'possibleCompressTarget': 74754,
+                                'possibleCompressImprovement': 128815,
+                                'possibleCompressWithOnlyScriptGzip': 74754
+                            }
+                        },
+                        'style': {
+                            'total': {
+                                'redirects': 0,
+                                'rawRequests': 0,
+                                'requestErrors': 0,
+                                'requests': 0,
+                                'size': 0,
+                                'fullSize': 0
                             },
-                            'image': {},
-                            'other': {},
-                            'errors': {}
+                            'tips': {
+                                'possibleCompressTarget': 0,
+                                'possibleCompressImprovement': 0,
+                                'possibleCompressWithOnlyScriptGzip': 0
+                            }
+                        },
+                        'image': {
+                            'total': {
+                                'redirects': 0,
+                                'rawRequests': 7,
+                                'requestErrors': 0,
+                                'requests': 7,
+                                'size': 83227,
+                                'fullSize': 83227
+                            },
+                            'tips': {
+                                'possibleCompressTarget': 82773,
+                                'possibleCompressImprovement': 454,
+                                'possibleCompressWithOnlyScriptGzip': 83227
+                            }
+                        },
+                        'other': {
+                            'total': {
+                                'redirects': 0,
+                                'rawRequests': 0,
+                                'requestErrors': 0,
+                                'requests': 0,
+                                'size': 0,
+                                'fullSize': 0
+                            },
+                            'tips': {
+                                'possibleCompressTarget': 0,
+                                'possibleCompressImprovement': 0,
+                                'possibleCompressWithOnlyScriptGzip': 0
+                            }
+                        },
+                        'errors': {
+                            'total': {
+                                'redirects': 0,
+                                'rawRequests': 0,
+                                'requestErrors': 0,
+                                'requests': 0,
+                                'size': 0,
+                                'fullSize': 0
+                            },
+                            'tips': {
+                                'possibleCompressTarget': 0,
+                                'possibleCompressImprovement': 0,
+                                'possibleCompressWithOnlyScriptGzip': 0
+                            }
+                        }
+                    },
+                    'types': {
+                        'script': {
+                            'http://localhost:8000/fixtures/script1.js': getFakeRequest(),
+                            'http://localhost:8000/fixtures/script2.js': getFakeRequest(),
+                            'http://localhost:8000/fixtures/script3.js': getFakeRequest()
+                        },
+                        'style': {
+                            'http://localhost:8000/fixtures/style.css': getFakeRequest('text/css')
+                        },
+                        'image': {
+                            'http://...': getFakeRequest('image/png')
+                        },
+                        'other': {
+                            'http://...': getFakeRequest('text/plain')
+                        },
+                        'errors': {
+                            'http://...': getFakeRequest('text/html')
                         }
                     }
                 }
             }
-        };
+        }
+    };
+}
+
+describe('Sizes validator', function () {
+
+    it('should report on external files', function (done) {
+        var harvested = getHarvestedData();
         var reporter = help.createReporter.call(this);
 
         help.callValidator('sizes', harvested, reporter, handler);
@@ -53,6 +157,19 @@ describe('Sizes validator', function () {
             done();
         }
 
+    });
+
+    it('should generate error if missing har', function(done){
+        var reporter = help.createReporter.call(this);
+        help.callValidator('sizes', {har: {}}, reporter, handler);
+
+        function handler() {
+            var report = reporter.getResult();
+
+            assert.equals(report.error.length, 1);
+
+            done();
+        }
     });
 
     it('should report on sizes', function (done) {
@@ -118,7 +235,7 @@ describe('Sizes validator', function () {
         };
         var reporter = help.createReporter.call(this);
 
-        function mutate(context){
+        function mutate(context) {
             context.thresholdBytes = 50000;
         }
 
