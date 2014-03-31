@@ -1,11 +1,9 @@
 var referee = require('referee');
 var assert = referee.assert;
-var refute = referee.refute;
-var help = require('../lib/validateHelpers.js');
 
-var hook = require('../../lib/rule/hook/gardr.js');
+var instrumentation = require('../../lib/rule/instrument/gardr.js');
 
-describe('Gardr hooks', function () {
+describe('Gardr instrumentation', function () {
 
     it('should store probes', function () {
 
@@ -30,13 +28,13 @@ describe('Gardr hooks', function () {
                     }
                 };
                 calls++;
-                res = fn();
+                var res = fn();
                 global.window = null;
                 return res;
             }
         };
 
-        hook.onPageOpen(api);
+        instrumentation.onPageOpen(api);
 
         assert.equals(calls, 2);
         assert(arg, 'should have collected initManager argument');
@@ -45,17 +43,7 @@ describe('Gardr hooks', function () {
 
 });
 
-var validator = require('../../lib/rule/validator/gardr.js');
-
-var defaultOptions = {
-    width: 980,
-    height: 225,
-    options: {
-        format: {
-            height: 225
-        }
-    }
-};
+var help = require('../lib/validateHelpers.js');
 
 describe('Gardr validator', function () {
 
@@ -87,12 +75,12 @@ describe('Gardr validator', function () {
 
         var reporter = help.createReporter.call(this);
 
-        validator.validate(harvest, reporter, function () {
+        help.callValidator('gardr', harvest, reporter, function () {
             var result = reporter.getResult();
 
             assert.equals(result.error.length, 4);
             done();
-        }, defaultOptions);
+        });
 
     });
 
@@ -128,21 +116,19 @@ describe('Gardr validator', function () {
 
         var harvest = getValid('function(){window.open(url, "new_window");}');
         var reporter = help.createReporter.call(this);
-        var options = {
-            width: 980,
-            height: 225,
-            options: {
-                format: {
-                    height: 400
-                }
-            }
-        };
 
-        validator.validate(harvest, reporter, function () {
+        function mutate(context, options){
+            options.width.min = 400;
+            options.width.max = 400;
+        }
+
+        function handler() {
             var result = reporter.getResult();
-            assert.equals(result.error.length, 1, '400 is height format, other heights should throw error');
+            assert.equals(result.error.length, 1, '400 is height format, other heights should generate error');
             done();
-        }, options);
+        }
+
+        help.callValidator('gardr', harvest, reporter, handler, mutate);
 
     });
 
@@ -152,12 +138,12 @@ describe('Gardr validator', function () {
 
         var reporter = help.createReporter.call(this);
 
-        validator.validate(harvest, reporter, function () {
+        help.callValidator('gardr', harvest, reporter, function () {
             var result = reporter.getResult();
 
             assert.equals(result.error.length, 1);
             done();
-        }, defaultOptions);
+        });
 
     });
 
@@ -167,35 +153,32 @@ describe('Gardr validator', function () {
 
         var reporter = help.createReporter.call(this);
 
-        validator.validate(harvest, reporter, function () {
+        help.callValidator('gardr', harvest, reporter, function () {
             var result = reporter.getResult();
 
             assert.equals(result.error.length, 0);
-        }, defaultOptions);
+        });
 
         harvest = getValid('window.open(url, "new_window")');
 
-        validator.validate(harvest, reporter, function () {
+        help.callValidator('gardr', harvest, reporter, function () {
             var result = reporter.getResult();
 
             assert.equals(result.error.length, 0);
             done();
-        }, defaultOptions);
+        });
 
     });
 
     it('should error on invalid ref', function (done) {
-
         var harvest = getValid('function(){open(url, "_blank");}');
-
         var reporter = help.createReporter.call(this);
 
-        validator.validate(harvest, reporter, function () {
+        help.callValidator('gardr', harvest, reporter, function () {
             var result = reporter.getResult();
-
             assert.equals(result.error.length, 1);
             done();
-        }, defaultOptions);
+        });
 
     });
 
@@ -205,16 +188,16 @@ describe('Gardr validator', function () {
 
         var reporter = help.createReporter.call(this);
 
-        validator.validate(harvest, reporter, function () {
+        help.callValidator('gardr', harvest, reporter, function () {
             var result = reporter.getResult();
 
             assert.equals(result.error.length, 1);
             done();
-        }, defaultOptions);
+        });
     });
 
     it('should call next if missing data', function (done) {
-        validator.validate(null, null, done, defaultOptions);
+        help.callValidator('gardr', {}, {}, done);
     });
 
 });

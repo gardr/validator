@@ -12,26 +12,26 @@ describe('collect options', function () {
 
     it('should create a spec file path array', function () {
         // the api says that runner should provide a function to retrieve a spec, not reflected in the test description
-        var files = helpers.collectSpec({
-            timers: true,
-            latestJQuery: true,
-            hooky: HOOKY_PATH
-        });
+        var files = helpers.collectSpec([
+            'timers',
+            'latestJQuery',
+            {name: 'hooky', path: HOOKY_PATH}
+        ]);
 
         assert.equals(files.length, 3);
-        assert.equals(files[2], HOOKY_PATH);
+        assert.equals(files[2].path, HOOKY_PATH);
     });
 
     it('should create a validator file path array', function () {
         // should provide a list of validator result files
-        var files = helpers.collectValidator({
-            timers: true,
-            latestJQuery: true,
-            valy: VALIDATOR_PATH
-        });
+        var files = helpers.collectValidator([
+            'timers',
+            'latestJQuery',
+            {name: 'valy', path: VALIDATOR_PATH}
+        ]);
 
         assert.equals(files.length, 3);
-        assert.equals(files[2], VALIDATOR_PATH);
+        assert.equals(files[2].path, VALIDATOR_PATH);
     });
 
     it('should return error on missing hook or validator files', function (done) {

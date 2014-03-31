@@ -2,9 +2,11 @@ var referee = require('referee');
 var assert = referee.assert;
 //var refute = referee.refute;
 
-var cssHOOK = require('../../lib/rule/hook/css.js');
+var config = require('../../config/config.js');
+var defaults = config.config.css;
+var instrumentation = require('../../lib/rule/instrument/css.js');
 
-describe('CSS hook', function () {
+describe('CSS instrumentation', function () {
 
     it('it should collect styles and filter', function(){
 
@@ -13,14 +15,13 @@ describe('CSS hook', function () {
             'set' : function(key, value){
                 result[key] = value;
             },
-            'evaluate' : function(fn){
-                return fn();
+            'evaluate' : function(fn, arg1){
+                return fn(arg1);
             },
             'switchToIframe' : function(){
 
             }
         };
-
 
         function dom(content){
             return {
@@ -34,19 +35,15 @@ describe('CSS hook', function () {
             }
         };
 
-        cssHOOK.onBeforeExit(api);
+        instrumentation.onBeforeExit(api, defaults);
 
         global.document = null;
 
         assert.isArray(result.styles);
         assert.equals(result.styles.length, 1);
-
-
     });
-
 });
 
-var cssValidator = require('../../lib/rule/validator/css.js');
 var help = require('../lib/validateHelpers.js');
 
 describe('CSS validator', function(){
@@ -68,14 +65,13 @@ describe('CSS validator', function(){
 
         var reporter = help.createReporter.call(this);
 
-        cssValidator.validate(harvest, reporter, function(){
-
+        help.callValidator('css', harvest, reporter, function(){
             var result = reporter.getResult();
-
-            assert.equals(result.error.length, 3, 'should filter tags with usages except margin/padding');
-
+            assert.equals(
+                result.error.length, 3, 'should filter tags with usages except margin/padding');
             done();
         });
+
     });
 
 });

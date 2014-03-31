@@ -24,7 +24,7 @@ describe('spawn', function () {
         var input = {pageUrl: 'about:blank', spec: {a: 'a'}};
         this.spawn(input, function( argMock){
             refute.equals(input, argMock);
-            assert(argMock.args[1].indexOf('headers') >-1, 'Smoketest options failed');
+            assert.equals(JSON.stringify(input), argMock.args[1]);
             done();
         });
     });

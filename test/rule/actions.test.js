@@ -2,8 +2,10 @@ var referee = require('referee');
 var assert = referee.assert;
 //var refute = referee.refute;
 
-var hook = require('../../lib/rule/hook/actions.js');
+var defaults = require('../../config/config.js').config.actions;
+var instrument = require('../../lib/rule/instrument/actions.js');
 //var help = require('../lib/validateHelpers.js');
+
 
 describe('Actions', function () {
 
@@ -37,19 +39,19 @@ describe('Actions', function () {
 
         var api = {
             switchToIframe: function () {},
-            evaluate: function (fn) {
-                return fn();
+            evaluate: function (fn, arg1) {
+                return fn.call(this, arg1);
             },
             set: function(key, value){
                 result.actions[key] = value;
             }
         };
 
-        hook.onHalfTime(api);
+        instrument.onHalfTime(api, defaults);
 
         window.open('some url', 'some_target');
 
-        hook.onBeforeExit(api);
+        instrument.onBeforeExit(api, defaults);
 
         setTimeout(function(){
             assert.equals(calledRealImpl, 0);

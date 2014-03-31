@@ -1,1 +1,3 @@
-module.exports = require('./lib/index.js').run;
+var lib = require('./lib/index.js');
+module.exports = lib.run;
+module.exports.defaults=  lib.defaults;

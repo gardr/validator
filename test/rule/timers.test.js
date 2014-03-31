@@ -5,8 +5,8 @@ var assert = referee.assert;
 var help    = require('../lib/validateHelpers.js');
 var HOOKS   = require('../../lib/phantom/createHooks.js').HOOKS;
 
-var hooks   = require('../../lib/rule/hook/timers.js');
-var timers  = require('../../lib/rule/validator/timers.js');
+var instrumentation   = require('../../lib/rule/instrument/timers.js');
+var timers  = require('../../lib/rule/validate/timers.js');
 
 function getTraceList(targetNum, i){
     var res = [];
@@ -24,14 +24,14 @@ function getTraceList(targetNum, i){
 }
 
 
-describe('timers hooks', function(){
+describe('timers instrumentation', function(){
 
     it('should return an object', function(){
-        assert.isObject(hooks);
+        assert.isObject(instrumentation);
     });
 
-    it('should only use hooks that exist', function(){
-        Object.keys(hooks).forEach(function(hookKey){
+    it('should only use instrumentation that exist', function(){
+        Object.keys(instrumentation).forEach(function(hookKey){
             assert(HOOKS.indexOf(hookKey) !== -1, hookKey + ' is not Valid');
         });
     });
