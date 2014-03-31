@@ -2,9 +2,8 @@ var referee = require('referee');
 var assert = referee.assert;
 //var refute = referee.refute;
 var help = require('../lib/validateHelpers.js');
-var validator = require('../../lib/rule/validator/sizes.js');
 
-describe('Size validator', function () {
+describe('Sizes validator', function () {
 
     it('should report on external files', function (done) {
         var harvested = {
@@ -42,9 +41,8 @@ describe('Size validator', function () {
             }
         };
         var reporter = help.createReporter.call(this);
-        var options = {};
 
-        validator.validate(harvested, reporter, handler, options);
+        help.callValidator('sizes', harvested, reporter, handler);
 
         function handler() {
             var report = reporter.getResult();
@@ -79,16 +77,13 @@ describe('Size validator', function () {
             }
         };
         var reporter = help.createReporter.call(this);
-        var options = {
-            target: 'tablet'
-        };
 
-        validator.validate(harvested, reporter, handler, options);
+        help.callValidator('sizes', harvested, reporter, handler);
 
         function handler() {
             var report = reporter.getResult();
 
-            assert.equals(report.error.length, 0, 'expect 99 kb to not generate an error if target is tablet');
+            assert.equals(report.error.length, 0, 'expect 99 kb to not generate an error ');
             assert.equals(report.info.length, 1);
             assert.equals(report.meta.length, 3);
 
@@ -122,16 +117,17 @@ describe('Size validator', function () {
             }
         };
         var reporter = help.createReporter.call(this);
-        var options = {
-            target: 'mobile'
-        };
 
-        validator.validate(harvested, reporter, handler, options);
+        function mutate(context){
+            context.thresholdBytes = 50000;
+        }
+
+        help.callValidator('sizes', harvested, reporter, handler, mutate);
 
         function handler() {
             var report = reporter.getResult();
 
-            assert.equals(report.error.length, 1, 'expect 99 kb to generate an error if target is mobile');
+            assert.equals(report.error.length, 1, 'expect 99 kb to generate an error');
             assert.equals(report.info.length, 0);
             assert.equals(report.meta.length, 3);
 

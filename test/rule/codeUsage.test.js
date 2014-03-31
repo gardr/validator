@@ -2,10 +2,7 @@ var referee = require('referee');
 var assert = referee.assert;
 //var refute = referee.refute;
 
-var validator   = require('../../lib/rule/validator/codeUsage.js');
 var help        = require('../lib/validateHelpers.js');
-var config      = help.config;
-
 
 function getHarvestFixture() {
     return {
@@ -59,7 +56,9 @@ describe('Static code inspection / code usages', function () {
 
     it('should report on geolocation usage', function (done) {
         var reporter = help.createReporter.call(this);
-        validator.validate(getHarvestFixture(), reporter, handler, config);
+
+        help.callValidator('codeUsage', getHarvestFixture(), reporter, handler);
+
         function handler() {
             var result = reporter.getResult();
             assert.equals(result.error.length, 4, 'should report on geolocation usage');

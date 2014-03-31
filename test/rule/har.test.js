@@ -6,7 +6,7 @@ var buster = require('referee');
 var assert = buster.assert;
 var refute = buster.refute;
 
-var hook = require('../../lib/rule/hook/har.js');
+var instrumentation = require('../../lib/rule/instrument/har.js');
 var hooksApi = require('../../lib/phantom/hooksApi.js');
 
 describe('HAR hook', function () {
@@ -16,12 +16,12 @@ describe('HAR hook', function () {
         var result = {};
         var api = hooksApi({}, {}, result, 'har');
 
-        hook.onLoadStarted();
-        hook.onResourceRequested({id: 1});
-        hook.onResourceReceived({id: 1, stage: 'start'});
-        hook.onResourceReceived({id: 1, stage: 'end'});
-        hook.onPageOpen();
-        hook.onBeforeExit(api);
+        instrumentation.onLoadStarted();
+        instrumentation.onResourceRequested({id: 1});
+        instrumentation.onResourceReceived({id: 1, stage: 'start'});
+        instrumentation.onResourceReceived({id: 1, stage: 'end'});
+        instrumentation.onPageOpen();
+        instrumentation.onBeforeExit(api);
 
         var res = result.har.input.resources;
 
@@ -37,7 +37,7 @@ var proxyquire = require('proxyquire');
 
 describe('HAR preprocessor', function () {
 
-    var preprocessor = proxyquire('../../lib/rule/preprocessor/har.js', {
+    var preprocessor = proxyquire('../../lib/rule/preprocess/har.js', {
         '../../createHAR.js': function (options, harInput) {
             return harInput;
         }
@@ -119,7 +119,7 @@ describe('HAR preprocessor', function () {
         });
     }
 
-    var processResources = require('../../lib/rule/preprocessor/processResources.js');
+    var processResources = require('../../lib/rule/preprocess/processResources.js');
 
     it('should populate real sizes and collect contents', function(done){
         var harvested = {

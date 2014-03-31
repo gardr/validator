@@ -1,12 +1,10 @@
 var buster = require('referee');
 var assert = buster.assert;
-var refute = buster.refute;
 
-var config = require('../../config/config.js');
-var hook = require('../../lib/rule/hook/errors.js');
+var instrumentation = require('../../lib/rule/instrument/common.js');
 
 
-describe('Errors hook', function () {
+describe('Common instrumentation', function () {
 
     it('should report error', function (done) {
 
@@ -21,14 +19,15 @@ describe('Errors hook', function () {
             }
         };
 
-        var result = hook.onError(message, trace, api);
-        assert(result, 'hook should return true');
+        var result = instrumentation.onError(message, trace, api);
+        assert(result, 'instrumentation should return true');
     });
 
 });
 
-var validator = require('../../lib/rule/validator/errors.js');
-describe('Errors validator', function () {
+var help        = require('../lib/validateHelpers.js');
+
+describe('Common validator', function () {
 
     it('should report usererrors as validations errors', function () {
 
@@ -46,17 +45,17 @@ describe('Errors validator', function () {
             }
         };
 
-        validator.validate(harvested, report, function(){}, config);
+        help.callValidator('common', harvested, report, function(){});
         assert.equals(called, 0);
 
 
         harvested.common.errors.push({message: 'some error'});
-        validator.validate(harvested, report, function(){}, config);
+        help.callValidator('common', harvested, report, function(){});
 
         assert.equals(called, 1);
 
         harvested.common.systemErrors.push({message: 'another error'});
-        validator.validate(harvested, report, function(){}, config);
+        help.callValidator('common', harvested, report, function(){});
 
         assert.equals(called, 3);
     });

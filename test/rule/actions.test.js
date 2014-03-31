@@ -3,7 +3,7 @@ var assert = referee.assert;
 //var refute = referee.refute;
 
 var defaults = require('../../config/config.js').config.actions;
-var hook = require('../../lib/rule/hook/actions.js');
+var instrument = require('../../lib/rule/instrument/actions.js');
 //var help = require('../lib/validateHelpers.js');
 
 
@@ -47,11 +47,11 @@ describe('Actions', function () {
             }
         };
 
-        hook.onHalfTime(api, defaults);
+        instrument.onHalfTime(api, defaults);
 
         window.open('some url', 'some_target');
 
-        hook.onBeforeExit(api, defaults);
+        instrument.onBeforeExit(api, defaults);
 
         setTimeout(function(){
             assert.equals(calledRealImpl, 0);

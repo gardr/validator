@@ -15,7 +15,7 @@ describe('createHooks', function () {
 
         var page = {};
         var options = {
-            hooks: [fixture]
+            'instrument': [fixture]
         };
         createHooks(page, options, baseApi.createSubContext(this.test.title));
 
@@ -37,10 +37,10 @@ describe('createHooks', function () {
             };
         }
         var options = {
-            hooks: [getFixture('key1'), getFixture('key2'), getFixture('key3'), getFixture('key4')]
+            'instrument': [getFixture('key1'), getFixture('key2'), getFixture('key3'), getFixture('key4')]
         };
 
-        times = options.hooks.length;
+        times = options.instrument.length;
         createHooks(page, options, baseApi);
 
         page.onBeforeExit.call(page, arg1, arg2);
@@ -72,7 +72,7 @@ describe('createHooks', function () {
         var api = baseApi.createSubContext('common');
         var called = 0;
         var options = {
-            hooks: [{
+            instrument: [{
                 name: testTitle,
                 onAlert: function(msg, _api){
                     if (msg && _api){

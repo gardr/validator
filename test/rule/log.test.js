@@ -1,10 +1,10 @@
 var buster = require('referee');
 var assert = buster.assert;
-var refute = buster.refute;
+//var refute = buster.refute;
 
 var hooksApi = require('../../lib/phantom/hooksApi.js');
-var logHook = require('../../lib/rule/hook/log.js');
-var proc = require('../../lib/rule/preprocessor/log.js');
+var intrumentation = require('../../lib/rule/instrument/log.js');
+var proc = require('../../lib/rule/preprocess/log.js');
 
 describe('Log ', function(){
 
@@ -14,7 +14,7 @@ describe('Log ', function(){
 
         var message = 'msg'+Math.random()*Date.now();
 
-        logHook.onConsoleMessage(message, null, null, api);
+        intrumentation.onConsoleMessage(message, null, null, api);
         assert.equals(result.log.logs[0].message, message);
     });
 

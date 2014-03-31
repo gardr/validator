@@ -5,9 +5,9 @@ var refute = referee.refute;
 var proxyquire = require('proxyquire');
 
 var help = require('../lib/validateHelpers.js');
-var hook = require('../../lib/rule/hook/jquery.js');
+var instrumentation = require('../../lib/rule/instrument/jquery.js');
 
-describe('jQuery hook', function () {
+describe('jQuery instrumentation', function () {
 
     it('should call wrap', function () {
 
@@ -18,28 +18,28 @@ describe('jQuery hook', function () {
             }
         };
 
-        hook.onResourceReceived({
+        instrumentation.onResourceReceived({
             url: 'someUrl',
             stage: 'end'
         }, api);
 
         assert.equals(calls, 0);
 
-        hook.onResourceReceived({
+        instrumentation.onResourceReceived({
             url: 'jquery.js',
             stage: 'start'
         }, api);
 
         assert.equals(calls, 0);
 
-        hook.onResourceReceived({
+        instrumentation.onResourceReceived({
             url: 'jquery.js',
             stage: 'end'
         }, api);
 
         assert.equals(calls, 1);
 
-        hook.onResourceReceived({
+        instrumentation.onResourceReceived({
             url: 'jquery.js',
             stage: 'end'
         }, api);
@@ -68,7 +68,7 @@ describe('jQuery hook', function () {
             }
         };
 
-        hook.onBeforeExit(apiShim);
+        instrumentation.onBeforeExit(apiShim);
 
         assert.equals(calls, 2);
         assert.equals(result.jquery.version, key);
@@ -82,13 +82,13 @@ function shimLatest(cb) {
         { major: 2, minor: 0,  patch: 3, sortKey: 20003}
        ]);
 }
-var jqueryPreprocessor = proxyquire('../../lib/rule/preprocessor/jquery.js', {
+var jqueryPreprocessor = proxyquire('../../lib/rule/preprocess/jquery.js', {
     '../lib/getLatestJquery.js': {
         'getLatest': shimLatest
     }
 });
 
-var jqueryValidator = require('../../lib/rule/validator/jquery.js');
+var jqueryValidator = require('../../lib/rule/validate/jquery.js');
 
 describe('jQuery validator', function () {
 
