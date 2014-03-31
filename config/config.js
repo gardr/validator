@@ -12,17 +12,38 @@ module.exports = {
     parentUrl: resolve('resources/parent.html'),
     iframeUrl: resolve('resources/iframe.html'),
 
-    // todo, not implemented
-    include: [],
-    includeExtra: [],
-    ignore: [],
 
     validatorBase: null,
-    hooks: null,
-    validators: null,
-    validatorFiles: null,
-    preprocessors: null,
-    preprocessorsFiles: null,
+
+    instrument: [
+        // 'errors', // common
+        // 'har', // common
+        // 'log',
+        // 'actions',
+        // 'css',
+        // 'script',
+        // 'screenshots',
+        // 'timers',
+        // 'jquery',
+        // 'gardr',
+        // 'touch'
+    ],
+    preprocess: [
+        'screenshots',
+        'har'
+    ],
+    validate : [
+        'common',
+        'log' ,
+        'css' ,
+        'timers',
+        'jquery',
+        'gardr',
+        'sizes',
+        'codeUsage',
+        'touch'
+    ],
+
 
     // config for hooks etc, namespace for convenience.
     config: validatorConfig,

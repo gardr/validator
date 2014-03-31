@@ -41,13 +41,15 @@ module.exports = {
         //output logs to view maybe?
     },
     sizes: {
-        refetchResources: true, // processReources.js
-        filterAfterUserInteraction: true, // onHalfTime triggers actions
+        //refetchResources: true, // processReources.js
+        //filterAfterUserInteraction: true, // onHalfTime triggers actions
         thresholdBytes: 100000, // bytes gziped
         giveExtraThreshold: {
             jQuery: true,
+            jQueryThreshold: 33369,
             AdForm: true
         },
+        minimumPayloadSize: 100,
         maxRequests: {
             style: 0,
             script: 2,
@@ -61,5 +63,13 @@ module.exports = {
         setTimeout: 20,
         setInterval: 1,
         requestAnimationFrame: 0
+    },
+    touch: {
+        swipeTop: true,
+        swipeRight: true,
+        swipeLeft: true,
+        frames: 20,
+        swipeTime: 250,
+        delayBeforeNext: 1800
     }
 };
