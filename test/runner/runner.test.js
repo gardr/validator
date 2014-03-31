@@ -6,18 +6,20 @@ var refute = buster.refute;
 var proxyquire = require('proxyquire');
 
 var EXPECTED_VALID_REPORT_OBJECT = {
-    har: {},
-    clientHar: {},
-    probes: {}
+    'key1': {},
+    'key2': {},
+    'key3': {}
 };
 
-var runner = proxyquire('../../lib/index.js', {
+var mockedRunner = proxyquire('../../lib/index.js', {
     './spawn.js': function (options, handler, done) {
         var result = JSON.stringify(EXPECTED_VALID_REPORT_OBJECT);
         handler(result, done);
     },
-    './validate.js': function(data, validators, done){
-        done(null, {});
+    './validate.js': {
+        validate: function (data, validators, done) {
+            done(null, {});
+        }
     }
 });
 
@@ -25,21 +27,18 @@ var HOOKY_PATH = path.resolve(path.join(__dirname, 'fixtures', 'customhook', 'ho
 
 describe('Runner (phantomJs)', function () {
 
-    it('should require a hooks key', function (done) {
-        runner.run({
-            hooks: null
-        }, function (err, reportObj) {
-            refute.isNull(reportObj);
+    it('should require a option object', function (done) {
+        mockedRunner.run(null, function (err, reportObj) {
+            assert(err);
+            refute(reportObj);
             done();
         });
     });
 
-    it('should require a hooks object with hooks or validators', function (done) {
-        runner.run({
-            parentUrl: 'valid',
-            hooks: {
-                notValid: true
-            }
+    it('should require a intrument object with hooks or validators', function (done) {
+        mockedRunner.run({
+            'parentUrl': 'valid',
+            'instrument': ['notValid']
         }, function (err, reportObj) {
             assert(err, 'Expected a error');
             refute(reportObj);
@@ -48,21 +47,26 @@ describe('Runner (phantomJs)', function () {
     });
 
     it('should call spawn when options are valid', function (done) {
-        // The description does not match the test, spawn is an internal unknown to runner
-        runner.run({
-            hooks: {}
-        }, function (err, reportObj) {
-            refute(err);
+        var options = {
+            // test gets default (all) validators
+            // 'instrument': [],
+            // 'validate': [],
+            // 'preprocess': []
+        };
+        var called = 0;
+        mockedRunner.run(options, function (err, reportObj) {
+            called++;
+            assert.equals(called, 1, 'should not call callback more than once');
+            refute(err, 'should not return error');
             assert.isObject(reportObj);
             done();
         });
     });
 
-
     describe('handleResult', function () {
         it('should return an error when parsing invalid json result', function (done) {
             var strInput1 = 'ssomeasdøasldøsad';
-            runner.handleResult(strInput1, function (err, dataObj) {
+            mockedRunner.handleResult(strInput1, function (err, dataObj) {
                 assert.isObject(err);
                 assert.isNull(dataObj);
                 done();
@@ -73,7 +77,7 @@ describe('Runner (phantomJs)', function () {
             // feature is to return a data object when given correct input
             var input1 = EXPECTED_VALID_REPORT_OBJECT;
             var strInput1 = JSON.stringify(input1);
-            runner.handleResult(strInput1, function (err, dataObj) {
+            mockedRunner.handleResult(strInput1, function (err, dataObj) {
                 assert.isNull(err);
                 assert.isObject(dataObj);
                 assert.equals(dataObj, input1);
@@ -83,12 +87,12 @@ describe('Runner (phantomJs)', function () {
 
         it('should parse result with systemError:true as error', function (done) {
             var input1 = {
-                systemError: {
+                'systemError': {
                     message: 'huzzlas'
                 }
             };
             var strInput1 = JSON.stringify(input1);
-            runner.handleResult(strInput1, function (err, dataObj) {
+            mockedRunner.handleResult(strInput1, function (err, dataObj) {
                 assert.isNull(dataObj);
                 assert.isObject(err);
                 assert.equals(err, input1.systemError);
@@ -96,8 +100,8 @@ describe('Runner (phantomJs)', function () {
             });
         });
 
-        it('should not try to parse undefined', function(){
-            runner.handleResult(undefined, function(err, dataObj){
+        it('should not try to parse undefined', function () {
+            mockedRunner.handleResult(undefined, function (err, dataObj) {
                 assert(err);
                 refute(dataObj);
             });
@@ -105,17 +109,16 @@ describe('Runner (phantomJs)', function () {
 
     });
 
-    describe('full tests', function(){
+    describe('full tests', function () {
         var runner = require('../../lib/index.js');
 
-        it('should run with default config', function(done){
+        it('should run with default config', function (done) {
             var options = {
-                hooks: {},
-                pageRunTime: 25
+                'pageRunTime': 25
             };
-            runner.run(options, function(err, result){
-                if (err){
-                    console.log(err);
+            runner.run(options, function (err, result) {
+                if (err) {
+                    console.log('TEST RUN ERROR', err);
                 }
                 refute(err);
                 assert(result);
@@ -123,15 +126,15 @@ describe('Runner (phantomJs)', function () {
             });
         });
 
-        it('should run with log hooks', function(done){
+        it('should run with log instrumentation', function (done) {
             this.timeout(3000);
             var options = {
-                hooks: {log: true},
-                pageRunTime: 25
+                'instrument': ['log'],
+                'pageRunTime': 25
             };
-            runner.run(options, function(err, result){
-                if (err){
-                    console.log(err);
+            runner.run(options, function (err, result) {
+                if (err) {
+                    console.log('TEST RUN ERROR:', err);
                 }
                 refute(err);
                 assert(result.log.logs, 'expected a log');
@@ -139,17 +142,31 @@ describe('Runner (phantomJs)', function () {
             });
         });
 
-        it('should run with multiple hooks', function(done){
+        it('should run with multiple instrumentations', function (done) {
             this.timeout(3000);
             var options = {
-                hooks: {har: true, errors: true, log: true, hooky: HOOKY_PATH },
-                preprocessors: {har: true, log: true },
-                validators: {errors: true, log: true },
-                pageRunTime: 100
+                'instrument': [
+                    'har',
+                    'common',
+                    'log',
+                    {
+                        name: 'hooky',
+                        path: HOOKY_PATH
+                    }
+                ],
+                'preprocess': [
+                    'har',
+                    'log'
+                ],
+                'validate': [
+                    'common',
+                    'log'
+                ],
+                'pageRunTime': 100
             };
-            runner.run(options, function(err, result){
-                if (err){
-                    console.log(err);
+            runner.run(options, function (err, result) {
+                if (err) {
+                    console.log('TEST RUN ERROR', err);
                 }
                 refute(err);
                 assert(result.log.logs, 'expected a log');

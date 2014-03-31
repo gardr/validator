@@ -6,14 +6,15 @@ var helpers = require('../../lib/helpers.js');
 var validatorLib = require('../../lib/validate.js');
 var validate = validatorLib.validate;
 
+//var CUSTOM_HOOK_PATH = path.resolve(path.join(__dirname, 'fixtures', 'customhook', 'hooky.js'));
 var VALIDATOR_PATH_1 = path.resolve(path.join(__dirname, 'fixtures', 'customvalidator', 'validator1.js'));
 var VALIDATOR_PATH_2 = path.resolve(path.join(__dirname, 'fixtures', 'customvalidator', 'validator2.js'));
 
 describe('Validate', function () {
-    var files = helpers.collectValidator({
-        'val1': VALIDATOR_PATH_1,
-        'val2': VALIDATOR_PATH_2
-    });
+    var files = helpers.collectValidator([
+        {name: 'validator1', path: VALIDATOR_PATH_1},
+        {name: 'validator2', path: VALIDATOR_PATH_2}
+    ]);
 
     it('should throw when missing validators', function(){
         assert.exception(function(){
@@ -22,30 +23,33 @@ describe('Validate', function () {
 
 
         assert.exception(function(){
-            validate({}, {}, function(){});
+            validate({}, [], function(){});
         });
     });
 
     it('should throw on missing validator', function(){
         var invalidFiles = ['INVALID_PATH'];
 
-        assert.exception(function(){
-            validate({}, {validatorFiles: invalidFiles}, function(){});
+        validate({}, {validate: invalidFiles}, function(err){
+            assert(err);
         });
     });
 
     it('should not require objects, but return error on missing validate function', function(done){
-        validate({}, {validatorFiles: [{}]}, function(err){
+        var options = {
+            validate: ['INVALID_MODULE']
+        };
+        validate({}, options, function(err){
             assert(err);
             done();
         });
-    })
+    });
 
     it('should run a set of validators on probed data', function (done) {
 
         assert.equals(files.length, 2);
-        assert.equals(files[0], VALIDATOR_PATH_1);
-        assert.equals(files[1], VALIDATOR_PATH_2);
+        assert.equals(files[0].path, VALIDATOR_PATH_1);
+        assert.equals(files[1].path, VALIDATOR_PATH_2);
 
         var harvested = {
             'common': {
@@ -55,9 +59,12 @@ describe('Validate', function () {
             'hooky2': {}
         };
 
-        validate(harvested, {
-            validatorFiles: files
-        }, function (err, harvested, report) {
+        var options = {
+            'validate': files,
+            config: {}
+        };
+
+        validate(harvested, options, function (err, harvested, report) {
             refute(err);
             assert.isObject(report);
             assert.equals(report.info.length, 1);
@@ -69,7 +76,7 @@ describe('Validate', function () {
 
     });
 
-    it('should only provide depedencies', function (done) {
+    it('should only provide depedencies properties from hasvested data to validation function', function (done) {
 
         var data = {
             'custom': {
@@ -79,8 +86,10 @@ describe('Validate', function () {
             'filterOut': true
         };
         var validators = {
-            'validatorFiles': [{
-                validate: function (harvested, report, next) {
+            'config': {},
+            'instrument': [{name: 'custom'}],
+            'validate': [{
+                'validate': function (harvested, report, next) {
                     refute(harvested.filterOut, 'should only provide dependencies');
                     assert.equals(harvested.custom.data, data.custom.data);
                     next();
@@ -100,13 +109,21 @@ describe('Validate', function () {
                 'data': 1
             },
             'common': {},
+            'hooky': {},
             'filterOut': true
         };
         var called = 0;
 
         var options = {
-            'validatorFiles': [],
-            'preprocessorFiles': [{
+            'config': {},
+            'instrument': [
+                {name: 'custom'}
+            ],
+            'validate': [{
+                name: 'validate1',
+                path: VALIDATOR_PATH_1
+            }],
+            'preprocess': [{
                 preprocess: function (harvested, output, next) {
                     called++;
                     output('custom', 'key', 'value');
@@ -116,11 +133,12 @@ describe('Validate', function () {
                     next();
                 },
                 dependencies: ['custom'],
-                name: 'preprocessX'
+                name: 'custom'
             }]
         };
 
         validate(data, options, function(err, harvested){
+            refute(err);
             assert.equals(called, 1, 'expect preprocessors to be called 1 time');
             assert.equals(harvested.custom.key, 'value');
             assert.equals(harvested.custom.key2, 'value2');
@@ -129,15 +147,16 @@ describe('Validate', function () {
 
     });
 
-    it('should throw if trying to output on non-key-dependcies', function(){
+    it('should error if trying to output on non-key-dependcies', function(){
 
         var data = {
             'common': {}
         };
 
         var options = {
-            'validatorFiles': [],
-            'preprocessorFiles': [{
+            'config': {},
+            'validate': [],
+            'preprocess': [{
                 preprocess: function (harvested, output, next) {
                     output('custom', 'key', 'value');
                     next();
@@ -147,12 +166,10 @@ describe('Validate', function () {
             }]
         };
 
-        assert.exception(function(){
-            validate(data, options, function(){});
+        validate(data, options, function(err){
+            assert(err, 'should return an error');
+            assert.isObject(err, 'error should be a object');
         });
-
-
-
     });
 
     describe('Reporthelpers', function(){
