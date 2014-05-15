@@ -13,8 +13,9 @@ test:
 	@NODE_ENV=test $(MOCHA) $(TESTS_GLOB) -b --reporter $(REPORTER)
 build-gardr-client:
 	@ mkdir -p $(PHANTOM_RESOURCES)built
-	@ $(BROWSERIFY) $(PHANTOM_RESOURCES)gardr-iframe.js  > $(PHANTOM_RESOURCES)built/gardr-iframe.js
-	@ $(BROWSERIFY) $(PHANTOM_RESOURCES)gardr-manager.js > $(PHANTOM_RESOURCES)built/gardr-manager.js
+	@ cp node_modules/gardr-ext/iframe.html $(PHANTOM_RESOURCES)built/iframe.html
+	@ $(BROWSERIFY) $(PHANTOM_RESOURCES)ext.js  > $(PHANTOM_RESOURCES)built/ext.js
+	@ $(BROWSERIFY) $(PHANTOM_RESOURCES)host.js > $(PHANTOM_RESOURCES)built/host.js
 	@ echo "done building gardr resources"
 lint:
 	$(JSHINT) ./lib --exclude $(PHANTOM_RESOURCES)built
