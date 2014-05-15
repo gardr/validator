@@ -14,8 +14,8 @@ test:
 build-gardr-client:
 	@ mkdir -p $(PHANTOM_RESOURCES)built
 	@ cp node_modules/gardr-ext/iframe.html $(PHANTOM_RESOURCES)built/iframe.html
-	@ $(BROWSERIFY) $(PHANTOM_RESOURCES)ext.js  > $(PHANTOM_RESOURCES)built/ext.js
-	@ $(BROWSERIFY) $(PHANTOM_RESOURCES)host.js > $(PHANTOM_RESOURCES)built/host.js
+	@ $(BROWSERIFY) $(PHANTOM_RESOURCES)ext.js  -o $(PHANTOM_RESOURCES)built/ext.js
+	@ $(BROWSERIFY) $(PHANTOM_RESOURCES)host.js -o $(PHANTOM_RESOURCES)built/host.js
 	@ echo "done building gardr resources"
 lint:
 	$(JSHINT) ./lib --exclude $(PHANTOM_RESOURCES)built
