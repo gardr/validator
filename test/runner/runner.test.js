@@ -12,8 +12,14 @@ var EXPECTED_VALID_REPORT_OBJECT = {
 };
 
 var mockedRunner = proxyquire('../../lib/index.js', {
+    'fs': {
+        readFile: function(fileName, cb){
+            cb(null, JSON.stringify(EXPECTED_VALID_REPORT_OBJECT));
+        }
+    },
     './spawn.js': function (options, handler, done) {
-        var result = JSON.stringify(EXPECTED_VALID_REPORT_OBJECT);
+        var dummy = {path: '...', timestamp: Date.now()};
+        var result = JSON.stringify(dummy);
         handler(result, done);
     },
     './validate.js': {
@@ -57,6 +63,7 @@ describe('Runner (phantomJs)', function () {
         mockedRunner.run(options, function (err, reportObj) {
             called++;
             assert.equals(called, 1, 'should not call callback more than once');
+            //console.log(err, err.stack);
             refute(err, 'should not return error');
             assert.isObject(reportObj);
             done();

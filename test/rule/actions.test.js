@@ -11,6 +11,14 @@ describe('Actions', function () {
 
     it('should trigger a click', function(done){
 
+        var child = {
+            querySelector: function(){
+                return {
+                    dispatchEvent: function(){}
+                };
+            }
+        };
+
         global.document = {
             createEvent: function(){
                 return {
@@ -18,13 +26,8 @@ describe('Actions', function () {
                 };
             },
             body: {
-                firstChild: {
-                    querySelector: function(){
-                        return {
-                            dispatchEvent: function(){}
-                        };
-                    }
-                }
+                firstElementChild: child,
+                querySelector: child.querySelector
             }
         };
 

@@ -81,13 +81,15 @@ describe('Gardr instrumentation', function () {
                 };
             },
             __manager: {
-                _getById: function(){
-                    return {
-                        input: 'a',
+                _get: function(/*name*/){
+                    return [{
+                        options: {
+                            url: 'a'
+                        },
                         getData: function(){
                             return 'b';
                         }
-                    };
+                    }];
                 }
             }
         };
@@ -118,6 +120,26 @@ describe('Gardr validator', function () {
     it('should evaluate and return errors', function (done) {
         var harvest = {
             'gardr': {
+                'data': {
+                    'frameInput': {
+                        'height': 225,
+                        'minSize': 39,
+                        'name': 'phantom',
+                        'timeout': 200,
+                        'url': '...',
+                        'width': 980
+                    },
+                    'frameOutput': {
+                        'container': true,
+                        'height': 225,
+                        'hidden': false,
+                        'minSize': 39,
+                        'retries': 5,
+                        'timeout': 200,
+                        'url': '...',
+                        'width': 980
+                    }
+                },
                 'dom': {
                     banner: {
                         name: 'DIV',
@@ -155,6 +177,26 @@ describe('Gardr validator', function () {
     function getValid(clickHandler) {
         return {
             'gardr': {
+                'data': {
+                    'frameInput': {
+                        'height': 225,
+                        'minSize': 39,
+                        'name': 'phantom',
+                        'timeout': 200,
+                        'url': '...',
+                        'width': 980
+                    },
+                    'frameOutput': {
+                        'container': true,
+                        'height': 225,
+                        'hidden': false,
+                        'minSize': 39,
+                        'retries': 5,
+                        'timeout': 200,
+                        'url': '...',
+                        'width': 980
+                    }
+                },
                 'dom': {
                     banner: {
                         name: 'DIV',
