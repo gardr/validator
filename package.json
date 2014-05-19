@@ -1,6 +1,6 @@
 {
   "name": "gardr-validator",
-  "version": "0.2.2",
+  "version": "0.3.0",
   "main": "index.js",
   "author": {
     "name": "Sveinung Røsaker",
