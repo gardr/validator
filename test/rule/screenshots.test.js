@@ -3,7 +3,7 @@ var referee = require('referee');
 var assert = referee.assert;
 //var refute = referee.refute;
 
-var help = require('../lib/validateHelpers.js')
+var help = require('../lib/validateHelpers.js');
 var defaults = require('../../config/config.js').config.screenshots;
 var instrumentation = require('../../lib/rule/instrument/screenshots.js');
 

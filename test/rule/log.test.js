@@ -22,7 +22,7 @@ describe('Log ', function(){
 
         var input = {log: {logs: [{time: new Date()}]}};
 
-        proc.preprocess(input, function(){}, function(){
+        proc.preprocess.call({}, input, function(){}, function(){
             assert(input.log.logs[0].formattedTime);
             done();
         });
