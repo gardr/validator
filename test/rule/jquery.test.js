@@ -77,18 +77,19 @@ describe('jQuery instrumentation', function () {
 
 });
 
-function shimLatest(cb) {
-    cb([{ major: 1, minor: 10, patch: 2, sortKey: 11002},
-        { major: 2, minor: 0,  patch: 3, sortKey: 20003}
-       ]);
-}
-var jqueryPreprocessor = proxyquire('../../lib/rule/preprocess/jquery.js', {
-    '../lib/getLatestJquery.js': {
-        'getLatest': shimLatest
-    }
-});
-
 var jqueryValidator = require('../../lib/rule/validate/jquery.js');
+
+
+// function shimLatest(nr, cb) {
+//     cb([{ major: 1, minor: 10, patch: 2, sortKey: 11002},
+//         { major: 2, minor: 0,  patch: 3, sortKey: 20003}
+//        ]);
+// }
+// var jqueryPreprocessor = proxyquire('../../lib/rule/preprocess/jquery.js', {
+//     '../lib/getLatestJquery.js': {
+//         'getLatest': shimLatest
+//     }
+// });
 
 describe('jQuery validator', function () {
 
@@ -122,8 +123,8 @@ describe('jQuery validator', function () {
             harvested.jquery[key] = value;
         }
 
-        jqueryPreprocessor.preprocess(harvested, output, function(){
-            jqueryValidator.validate(harvested, report, function () {
+        help.callPreprocessor('jquery', harvested, output, function(){
+            help.callValidator('jquery', harvested, report, function () {
                 var result = report.getResult();
                 assert.equals(result.error.length, 1);
                 done();
@@ -133,21 +134,36 @@ describe('jQuery validator', function () {
     });
 });
 
-
-var getLatestJquery = require('../../lib/rule/lib/getLatestJquery.js');
+var getLatestJquery = proxyquire('../../lib/rule/lib/getLatestJquery.js', {
+    request: function(url, opt, cb){
+        setTimeout(function(){
+            cb(null, {}, JSON.stringify(require('./fixtures/tags.js')));
+        }, 1);
+    }
+});
 
 describe('getLatestJquery', function () {
 
-    it('should fetch tags from github repo tags', function(done){
-        this.timeout(5000);
-        getLatestJquery.getLatest(function(tags){
-            getLatestJquery.getLatest(function(tagsCached){
-                assert(tags === tagsCached);
+    it('should fetch 2 tags from jquery github repo tags, and return same object', function(done){
+        this.timeout(100);
+        getLatestJquery.getLatest(1, function(tags){
+            getLatestJquery.getLatest(1, function(tagsCached){
+                assert.equals(tags, tagsCached);
                 assert.equals(tags.length, 2);
                 done();
             });
         });
+    });
+
+
+    it('should fetch 3 tags', function(done){
+        this.timeout(100);
+        getLatestJquery.getLatest(3, function(tags){
+            assert.equals(tags.length, 6);
+            done();
+        });
 
     });
+
 });
 
