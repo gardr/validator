@@ -48,6 +48,28 @@ var help = require('../lib/validateHelpers.js');
 
 describe('CSS validator', function(){
 
+    it('should allow @font-face', function(done){
+        var harvest = {
+            css : {
+                styles: [
+                    '@font-face { font-family: "..."; }',
+                ],
+            },
+            har: {
+                file: {}
+            }
+        };
+
+        var reporter = help.createReporter.call(this);
+
+        help.callValidator('css', harvest, reporter, function(){
+            var result = reporter.getResult();
+            assert.equals(
+                result.error.length, 0, 'should allow @font-face');
+            done();
+        });
+    });
+
     it('should fail on tag styling', function(done){
         var harvest = {
             css : {
