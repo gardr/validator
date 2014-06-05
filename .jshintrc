@@ -35,7 +35,7 @@
     "trailing"      : true,
     "maxparams"     : 5,
     "maxdepth"      : 4,
-    "maxcomplexity" : 10,
+    "maxcomplexity" : 12,
     "maxlen"        : false,
 
 
