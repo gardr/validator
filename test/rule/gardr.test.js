@@ -131,7 +131,7 @@ describe('Gardr validator', function () {
                     },
                     'frameOutput': {
                         'container': true,
-                        'height': 225,
+                        'height': 222,
                         'hidden': false,
                         'minSize': 39,
                         'retries': 5,
@@ -167,7 +167,6 @@ describe('Gardr validator', function () {
 
         help.callValidator('gardr', harvest, reporter, function () {
             var result = reporter.getResult();
-
             assert.equals(result.error.length, 4);
             done();
         });
