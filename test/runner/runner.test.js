@@ -6,6 +6,7 @@ var refute = buster.refute;
 var proxyquire = require('proxyquire');
 
 var EXPECTED_VALID_REPORT_OBJECT = {
+    'path': 'DUMMY',
     'key1': {},
     'key2': {},
     'key3': {}
@@ -74,7 +75,7 @@ describe('Runner (phantomJs)', function () {
         it('should return an error when parsing invalid json result', function (done) {
             var strInput1 = 'ssomeasdøasldøsad';
             mockedRunner.handleResult(strInput1, function (err, dataObj) {
-                assert.isObject(err);
+                assert.isObject(err, 'should return an error');
                 assert.isNull(dataObj);
                 done();
             });
@@ -84,8 +85,12 @@ describe('Runner (phantomJs)', function () {
             // feature is to return a data object when given correct input
             var input1 = EXPECTED_VALID_REPORT_OBJECT;
             var strInput1 = JSON.stringify(input1);
+
             mockedRunner.handleResult(strInput1, function (err, dataObj) {
-                assert.isNull(err);
+                if(err){
+                    console.log(err);
+                }
+                assert.isNull(err, 'no error expected');
                 assert.isObject(dataObj);
                 assert.equals(dataObj, input1);
                 done();
@@ -94,6 +99,7 @@ describe('Runner (phantomJs)', function () {
 
         it('should parse result with systemError:true as error', function (done) {
             var input1 = {
+                // 'path': 'dummy',
                 'systemError': {
                     message: 'huzzlas'
                 }
