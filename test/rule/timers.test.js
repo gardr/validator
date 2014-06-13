@@ -52,7 +52,7 @@ describe('timers instrumentation', function(){
             set: function(){
                 called ++;
                 if (called === 3){
-                    assert.equals(wrappedCalled, 4);
+                    assert.equals(wrappedCalled, 5);
                     assert.equals(wrappedResolve, 4);
                     done();
                 }

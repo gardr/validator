@@ -158,6 +158,40 @@ describe('Runner (phantomJs)', function () {
             });
         });
 
+        // it('should run with bugged code', function(done){
+        //     var baseTime = 10000;
+        //     this.timeout(baseTime + 5000);
+        //     var tmps = os.tmpDir();
+        //     var options = {
+        //         'instrument': [
+        //             'timers',
+        //             'gardr',
+        //             'log'
+        //         ],
+        //         'preprocess': [],
+        //         'validate': [
+        //             'timers'
+        //         ],
+        //         'pageRunTime': baseTime,
+        //         'outputDirectory': tmps,
+        //         'scriptUrl': 'http://localhost:8000/user-entry.js?id=6cca6201-a33e-410c-9353-124b9aaffda6-131158-000006&timestamp=1402653620259'
+        //     };
+        //     runner.run(options, function (err, result) {
+        //         if (err) {
+        //             console.log('TEST RUN ERROR', err);
+        //         }
+        //         console.log('\n-------------------');
+        //         console.log(tmps);
+        //         console.log('\n-------------------');
+        //         console.log(result);
+        //         console.log('\n-------------------');
+        //         console.log(result.timers.setTimeout[0].length);
+        //         console.log(result.timers.clearTimeout[0]);
+        //
+        //         done();
+        //     });
+        // });
+
         it('should run with multiple instrumentations', function (done) {
             this.timeout(3000);
             var options = {
