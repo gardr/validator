@@ -88,7 +88,7 @@ describe('Runner (phantomJs)', function () {
 
             mockedRunner.handleResult(strInput1, function (err, dataObj) {
                 if(err){
-                    console.log(err);
+                    console.log('runner.js test error', err);
                 }
                 assert.isNull(err, 'no error expected');
                 assert.isObject(dataObj);
