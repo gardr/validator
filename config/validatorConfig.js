@@ -40,6 +40,9 @@ module.exports = {
     log: {
         //output logs to view maybe?
     },
+    security: {
+        checkUrl: true
+    },
     sizes: {
         //refetchResources: true, // processReources.js
         //filterAfterUserInteraction: true, // onHalfTime triggers actions

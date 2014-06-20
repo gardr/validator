@@ -15,31 +15,33 @@
     "url": "https://github.com/gardr/validator"
   },
   "dependencies": {
-    "phantomjs": "~1.9.7-5",
-    "async": "~0.8.0",
-    "hoek": "~2.1.0",
-    "moment": "~2.6.0",
-    "request": "~2.34.0",
-    "lodash": "~2.4.1",
+    "phantomjs": "^1.9.7-9",
+    "async": "^0.9.0",
+    "hoek": "^2.3.0",
+    "moment": "^2.7.0",
+    "request": "^2.36.0",
+    "lodash": "^2.4.1",
     "deep-freeze": "0.0.1",
-    "esprima": "^1.2.1",
+    "esprima": "^1.2.2",
     "estraverse": "^1.5.0",
-    "css-parse": "^1.7.0",
-    "browserify": "^4.1.3",
+    "css-parse": "^2.0.0",
+    "browserify": "^4.1.11",
     "mock-phantom-touch-events": "0.0.3",
-    "joi": "^3.1.0",
+    "joi": "^4.6.1",
     "gardr-host": "^0.4.1",
     "gardr-ext": "^0.4.1",
-    "es5-shim": "^3.3.0"
+    "es5-shim": "^3.4.0",
+    "safe-browse": "sveisvei/node-safe-browse"
   },
   "devDependencies": {
-    "mocha": "~1.18.2",
+    "mocha": "^1.20.1",
     "mocha-lcov-reporter": "0.0.1",
-    "proxyquire": "~0.5.2",
-    "node-static": "~0.7.3",
-    "referee": "~1.0.3",
-    "coveralls": "~2.8.0",
-    "istanbul": "~0.2.9",
-    "jshint": "~2.5.0"
+    "proxyquire": "^1.0.1",
+    "node-static": "^0.7.3",
+    "referee": "^1.0.3",
+    "coveralls": "^2.10.0",
+    "istanbul": "^0.2.11",
+    "jshint": "^2.5.1",
+    "mockery": "^1.4.0"
   }
 }

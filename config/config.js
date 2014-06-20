@@ -41,7 +41,8 @@ module.exports = {
         'gardr',
         'sizes',
         'codeUsage',
-        'touch'
+        'touch',
+        'security'
     ],
 
 
