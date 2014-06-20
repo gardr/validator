@@ -114,6 +114,7 @@ describe('jQuery validator', function () {
     });
 
     it('should report error when version doesnt match latest', function (done) {
+        this.timeout(3000);
         var report = help.createReporter.call(this);
         var harvested = {
             jquery: { version: '1.10.1' }
@@ -166,4 +167,3 @@ describe('getLatestJquery', function () {
     });
 
 });
-
