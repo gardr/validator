@@ -21,6 +21,7 @@ describe('Gardr instrumentation', function () {
             getOptions: function () {
                 return options;
             },
+            set: function(){},
             evaluate: function (fn, _opt) {
                 arg = _opt;
                 global.window = {
