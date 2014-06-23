@@ -40,8 +40,16 @@ module.exports = {
     log: {
         //output logs to view maybe?
     },
+    pagespeed: {
+        runGooglePagespeed: true,
+        scoreThreshold: 50,
+        serveDomain: 'http://validator.gardr.org',
+        serveIframeUrl: '/preview/built/iframe.html',
+        apiKey: process.env['GOOG_PAGESPEED_API_KEY']
+    },
     security: {
-        checkUrl: true
+        checkUrl: true,
+        apiKey: process.env['GOOG_SAFE_BROWSE_API_KEY']
     },
     sizes: {
         //refetchResources: true, // processReources.js

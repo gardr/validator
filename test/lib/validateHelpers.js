@@ -1,6 +1,8 @@
 var hoek = require('hoek');
+var proxyquire = require('proxyquire').noPreserveCache();
 var config = require('../../config/config.js');
 var validate = require('../../lib/validate.js');
+
 
 var internals = {};
 
@@ -20,25 +22,35 @@ internals.createReporter = function () {
 };
 
 internals.applyType = function (type) {
-    return function (name, harvest, reporter, cb, mutateFn) {
+    return function (name, harvest, reporter, callback, mutateDataFn, proxyquireInject) {
         if (!harvest) {
             throw new Error('Testhelper ' + name + ' needs a harvest object');
         }
         if (!reporter) {
             throw new Error('Testhelper ' + name + ' needs a reporter');
         }
-        if (typeof cb !== 'function') {
-            throw new Error('Testhelper ' + name + ' needs a done/callback function. Instead saw:' + (typeof cb));
+        if (typeof callback !== 'function') {
+            throw new Error('Testhelper ' + name + ' needs a done/callback function. Instead saw:' + (typeof callback));
         }
-        var cloned = hoek.clone(config);
-        var ctx = cloned.config[name];
+        var cloned  = hoek.clone(config);
+        var context = cloned.config[name];
 
-        if (typeof mutateFn === 'function') {
-            mutateFn(ctx, cloned);
+        if (typeof mutateDataFn === 'function') {
+            mutateDataFn(context, cloned);
         }
         var path = '../../lib/rule/' + type + '/' + name + '.js';
-        return require(path)[type]
-            .call(ctx, harvest, reporter, cb, cloned, ctx);
+
+        var fn;
+
+        if (proxyquireInject){
+            fn = proxyquire(path, proxyquireInject)[type];
+        } else {
+            fn = require(path)[type];
+        }
+
+
+        fn.call(context, harvest, reporter, callback, cloned, context);
+
     };
 };
 

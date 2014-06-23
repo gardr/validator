@@ -109,6 +109,12 @@ YES, pull requests with tests. Be sure to create a issue and let us know you are
 
 	$ npm test
 
+## Configuration options via process.env / ENV variables
+
+	- GOOG_PAGESPEED_API_KEY
+	- GOOG_SAFE_BROWSE_API_KEY
+
+
 ##### Alternatives
 
 (please let us know of alternatives to this project)
