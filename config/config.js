@@ -42,7 +42,8 @@ module.exports = {
         'sizes',
         'codeUsage',
         'touch',
-        'security'
+        'security',
+        'pagespeed'
     ],
 
 
