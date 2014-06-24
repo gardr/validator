@@ -130,14 +130,8 @@ describe('Gardr validator', function () {
                         'url': '...',
                         'width': 980
                     },
-                    'frameOutput': {
-                        'container': true,
+                    'rendered': {
                         'height': 222,
-                        'hidden': false,
-                        'minSize': 39,
-                        'retries': 5,
-                        'timeout': 200,
-                        'url': '...',
                         'width': 980
                     }
                 },
@@ -186,14 +180,8 @@ describe('Gardr validator', function () {
                         'url': '...',
                         'width': 980
                     },
-                    'frameOutput': {
-                        'container': true,
+                    'rendered': {
                         'height': 225,
-                        'hidden': false,
-                        'minSize': 39,
-                        'retries': 5,
-                        'timeout': 200,
-                        'url': '...',
                         'width': 980
                     }
                 },
