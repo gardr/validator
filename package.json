@@ -28,8 +28,8 @@
     "browserify": "^4.1.11",
     "mock-phantom-touch-events": "0.0.3",
     "joi": "^4.6.1",
-    "gardr-host": "^0.4.1",
-    "gardr-ext": "^0.4.1",
+    "gardr-host": "^0.5.0",
+    "gardr-ext": "^0.5.0",
     "es5-shim": "^3.4.0",
     "safe-browse": "sveisvei/node-safe-browse",
     "gpagespeed": "0.0.6"
