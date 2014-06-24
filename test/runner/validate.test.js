@@ -174,6 +174,7 @@ describe('Validate', function () {
 
     describe('Reporthelpers', function(){
         var reportKeys = validatorLib.REPORT_KEYS;
+
         it('should provide report fn', function(){
             var result = {};
             var reporter = validatorLib.createReportHelper(result)('test');
@@ -196,12 +197,12 @@ describe('Validate', function () {
             var result = {};
             var reporter = validatorLib.createReportHelper(result)('test');
 
-            it('should create an default empty array', function(){
+            it('should create an default empty checklist array', function(){
                 assert.isArray(result.checklist);
             });
 
 
-            it('should add a entry', function(){
+            it('should add a entry to called helper, but not to checklist if not active', function(){
                 reporter.info(1);
 
                 assert.equals(result.checklist.length, 0);
@@ -210,54 +211,52 @@ describe('Validate', function () {
 
 
             it('should add items to checklist', function(){
-                    reporter.setChecklist('LIST', 'DESCRIPTION');
+                var list = reporter.setChecklist('LIST', 'DESCRIPTION');
 
-                    assert.equals(result.checklist.length, 1);
+                assert.equals(result.checklist.length, 1);
 
-                    reporter.info(2);
+                reporter.info(2);
 
-                    var items = result.checklist[0].items;
+                var items = list.items;
 
-                    assert.equals(items.length, 1, 'item should be added');
+                assert.equals(items.length, 1, 'item should be added');
 
-                    reporter.info(3);
+                reporter.info(3);
 
-                    assert.equals(items.length, 2, 'item should be added');
-                    assert.equals(result.info.length, 3);
+                assert.equals(items.length, 2, 'item should be added');
+                assert.equals(result.info.length, 3);
             });
 
 
             it('should exit an checklist', function(){
                 reporter.exitChecklist();
 
-                reporter.info(4);
+                var inserted = reporter.info(4);
+
+                refute(inserted.isInChecklist);
 
                 assert.equals(result.checklist[0].items.length, 2, 'item should NOT be added');
                 assert.equals(result.info.length, 4);
             });
 
             it('should reuse existing checklist if same name', function(){
+                var inserted;
 
+                var list2 = reporter.setChecklist('LIST2', 'DESCRIPTION');
 
-                reporter.setChecklist('LIST2', 'DESCRIPTION');
+                inserted = reporter.info(5);
+                assert(inserted.isInChecklist);
+                assert.equals(inserted.checklistName, 'LIST2');
 
-                reporter.info(5);
+                var list1 = reporter.setChecklist('LIST', 'DESCRIPTION');
 
-                reporter.setChecklist('LIST', 'DESCRIPTION');
+                inserted = reporter.info(6);
+                assert(inserted.isInChecklist);
+                assert.equals(inserted.checklistName, 'LIST');
 
-                reporter.info(6);
-
-                assert.equals(result.checklist[0].items.length, 3);
-                assert.equals(result.checklist[1].items.length, 1);
-
-
+                assert.equals(list1.items.length, 3);
+                assert.equals(list2.items.length, 1);
             });
-
-
-
-
-
-
         });
 
         function createEntry(a, b){
