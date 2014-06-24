@@ -1,6 +1,7 @@
 var buster = require('referee');
 var assert = buster.assert;
 
+
 var instrumentation = require('../../lib/rule/instrument/common.js');
 
 
@@ -32,11 +33,10 @@ describe('Common validator', function () {
     it('should report usererrors as validations errors', function () {
 
         var called = 0;
-        var report = {
-            'error': function(){
-                called++;
-            }
-        };
+
+        var reporter = help.createReporter.call(this, function(){
+            called++;
+        });
 
         var harvested = {
             'common': {
@@ -45,17 +45,18 @@ describe('Common validator', function () {
             }
         };
 
-        help.callValidator('common', harvested, report, function(){});
+
+        help.callValidator('common', harvested, reporter, function(){});
         assert.equals(called, 0);
 
 
         harvested.common.errors.push({message: 'some error'});
-        help.callValidator('common', harvested, report, function(){});
+        help.callValidator('common', harvested, reporter, function(){});
 
         assert.equals(called, 1);
 
         harvested.common.systemErrors.push({message: 'another error'});
-        help.callValidator('common', harvested, report, function(){});
+        help.callValidator('common', harvested, reporter, function(){});
 
         assert.equals(called, 3);
     });

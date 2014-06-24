@@ -17,8 +17,8 @@ internals.getTraceObject = function (name) {
     };
 };
 
-internals.createReporter = function () {
-    return validate.createReportHelper({})(this.test.title);
+internals.createReporter = function (onCallFn) {
+    return validate.createReportHelper({}, onCallFn)(this.test.title);
 };
 
 internals.applyType = function (type) {
