@@ -173,7 +173,7 @@ describe('Validate', function () {
     });
 
     describe('Reporthelpers', function(){
-        var reportKeys = ['info', 'debug', 'warn', 'error'];
+        var reportKeys = validatorLib.REPORT_KEYS;
         it('should provide report fn', function(){
             var result = {};
             var reporter = validatorLib.createReportHelper(result)('test');
@@ -188,6 +188,75 @@ describe('Validate', function () {
             reportKeys.forEach(function(key){
                 assert(_result[key]);
             });
+
+        });
+
+        describe('Checklist', function(){
+
+            var result = {};
+            var reporter = validatorLib.createReportHelper(result)('test');
+
+            it('should create an default empty array', function(){
+                assert.isArray(result.checklist);
+            });
+
+
+            it('should add a entry', function(){
+                reporter.info(1);
+
+                assert.equals(result.checklist.length, 0);
+                assert.equals(result.info.length, 1);
+            });
+
+
+            it('should add items to checklist', function(){
+                    reporter.setChecklist('LIST', 'DESCRIPTION');
+
+                    assert.equals(result.checklist.length, 1);
+
+                    reporter.info(2);
+
+                    var items = result.checklist[0].items;
+
+                    assert.equals(items.length, 1, 'item should be added');
+
+                    reporter.info(3);
+
+                    assert.equals(items.length, 2, 'item should be added');
+                    assert.equals(result.info.length, 3);
+            });
+
+
+            it('should exit an checklist', function(){
+                reporter.exitChecklist();
+
+                reporter.info(4);
+
+                assert.equals(result.checklist[0].items.length, 2, 'item should NOT be added');
+                assert.equals(result.info.length, 4);
+            });
+
+            it('should reuse existing checklist if same name', function(){
+
+
+                reporter.setChecklist('LIST2', 'DESCRIPTION');
+
+                reporter.info(5);
+
+                reporter.setChecklist('LIST', 'DESCRIPTION');
+
+                reporter.info(6);
+
+                assert.equals(result.checklist[0].items.length, 3);
+                assert.equals(result.checklist[1].items.length, 1);
+
+
+            });
+
+
+
+
+
 
         });
 
