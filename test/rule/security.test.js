@@ -138,7 +138,7 @@ describe('Security validator', function() {
     it('should error if domains has malware', function(done) {
         var harvested = {
             'security': {
-                'domainResult': {
+                'domainsResult': {
                     'domain0': 'ok',
                     'domain1': 'malware',
                     'domain2': 'ok'
