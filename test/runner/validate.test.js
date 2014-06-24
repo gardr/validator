@@ -217,7 +217,7 @@ describe('Validate', function () {
 
                 reporter.info(2);
 
-                var items = list.items;
+                var items = list.info;
 
                 assert.equals(items.length, 1, 'item should be added');
 
@@ -235,7 +235,7 @@ describe('Validate', function () {
 
                 refute(inserted.isInChecklist);
 
-                assert.equals(result.checklist[0].items.length, 2, 'item should NOT be added');
+                assert.equals(result.checklist[0].info.length, 2, 'item should NOT be added');
                 assert.equals(result.info.length, 4);
             });
 
@@ -254,8 +254,8 @@ describe('Validate', function () {
                 assert(inserted.isInChecklist);
                 assert.equals(inserted.checklistName, 'LIST');
 
-                assert.equals(list1.items.length, 3);
-                assert.equals(list2.items.length, 1);
+                assert.equals(list1.info.length, 3);
+                assert.equals(list2.info.length, 1);
             });
         });
 
