@@ -11,7 +11,7 @@ var validatorConfig = require('./validatorConfig.js');
 module.exports = {
     parentUrl: resolve('resources/parent.html'),
     iframeUrl: resolve('resources/built/iframe.html'),
-
+    resourceDomainBase: 'file://',
 
     validatorBase: null,
 
