@@ -20,6 +20,9 @@ describe('Runner (phantomJs)', function() {
         'fs': {
             readFile: function(fileName, cb) {
                 cb(null, JSON.stringify(EXPECTED_VALID_REPORT_OBJECT));
+            },
+            stat: function(fileName, cb){
+                cb(null, {size: 1000});
             }
         },
         './spawn.js': function(options, handler, done) {
