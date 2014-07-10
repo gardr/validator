@@ -4,44 +4,90 @@ var help = require('../lib/validateHelpers.js');
 
 var instrumentation = require('../../lib/rule/instrument/gardr.js');
 
+function noop(){}
+
 describe('Gardr instrumentation', function () {
 
-    it('should store probes', function () {
+    it('should store probes', function (done) {
 
-        var options = {
-            'key': Math.random() * 1000 * Date.now()
-        };
-        var calls = 0;
-        var arg;
-        var injected = [];
-        var api = {
-            injectLocalJs: function (str) {
-                injected.push(str);
-            },
-            getOptions: function () {
-                return options;
-            },
-            set: function(){},
-            evaluate: function (fn, _opt) {
-                arg = _opt;
-                global.window = {
-                    initManager: function () {
-                        calls++;
-                    }
-                };
-                calls++;
-                var res = fn();
-                global.window = null;
-                return res;
-            }
+        var api = help.createApi({'onCustomEvent': noop});
+
+        global.window = {
+            'initManager': api.call,
+            '__manager': {}
         };
 
-        instrumentation.onPageOpen(api);
+        instrumentation.onPageOpen(api.api);
 
-        assert.equals(calls, 2);
-        assert(arg, 'should have collected initManager argument');
-        assert.equals(arg, JSON.stringify(options));
+        global.window = null;
+
+        assert.equals(api.calls, 2);
+        assert(api.lastOptionsArg, 'should have collected initManager argument');
+        assert.equals(api.lastOptionsArg, JSON.stringify(api.options));
+
+        done();
     });
+
+
+    function toElem(n){
+        n = n.split('#');
+        return {'tagName': n[0], 'id': n[1]};
+    }
+
+    function createRoot(input){
+        return {'children': input.map(toElem)};
+    }
+
+    [ createRoot(['style', 'script', 'div#correct', 'div']),
+      createRoot(['style', 'script', 'a#correct', 'div']),
+      createRoot(['style', 'script', 'noscript', 'meta', 'link', 'div#correct']),
+      createRoot(['a#correct', 'span']),
+      createRoot(['span#correct']),
+      createRoot(['div#correct', 'div', 'div']),
+      createRoot(['html', 'body', 'div#correct', 'img'])
+    ].forEach(generateTest);
+
+    function generateTest(rootElem, index){
+        it('should select correct elements list index '+index, function(done){
+            var api = help.createApi();
+
+            global.document = {
+                'getElementById': function(){
+                    return rootElem;
+                }
+            };
+            global.window = {
+                '__manager': {
+                    _get: function(){
+                        return [{getData: noop}];
+                    }
+                },
+                'initManager': api.call,
+                'getComputedStyle': function(){
+                    return {
+                        'getPropertyValue':noop
+                    };
+                }
+            };
+
+            instrumentation.onBeforeExit(api.api, {});
+
+            // console.log('DATA:', );
+
+            assert.equals(api.calls, 2);
+            assert.equals(api.otherCalls.switch, 3);
+
+            var data = api.result[api.options.key].dom.banner;
+
+            assert.equals(data.id, 'correct');
+
+
+            global.window = null;
+            global.document = null;
+            done();
+        });
+    }
+
 
     it('should collect css and dom data', function(){
         global.document = {
@@ -95,24 +141,12 @@ describe('Gardr instrumentation', function () {
             }
         };
 
-        var called = 0;
-        var api = {
-            set: function(){
-                called++;
-            },
-            switchToIframe: function(){},
-            switchToMainFrame: function(){},
-            evaluate: function(fn, arg){
-                return fn(arg);
-            }
-        };
+        var api = help.createApi();
 
-        instrumentation.onBeforeExit(api, help.config.config.gardr);
+        instrumentation.onBeforeExit(api.api, help.config.config.gardr);
 
-        assert.equals(called, 2);
-
+        assert.equals(api.calls, 2);
     });
-
 });
 
 

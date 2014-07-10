@@ -54,10 +54,75 @@ internals.applyType = function (type) {
     };
 };
 
+
+var createInstrumentationApi = require('../../lib/phantom/hooksApi.js');
+internals.createApi = function (page){
+    var options = {
+        'key': (Math.random() * 1000 * Date.now())
+    };
+    var o = {
+        'options' : options,
+        'calls' : 0,
+        'otherCalls': {},
+        'lastOptionsArg' : null,
+        'injected' : [],
+        'data': {},
+        'phantom': {},
+        'page': null,
+        'result': {},
+        'call': incCalls()
+    };
+
+
+    o.page = {
+        'evaluate': function(fn, lastOptionsArg){
+            o.lastOptionsArg = lastOptionsArg;
+            //setup
+            var res = fn();
+             //cleanup
+            o.call();
+            return res;
+        },
+        'injectJs': function (str) {
+            o.injected.push(str);
+            o.call();
+        },
+        'renderBase64': incCalls('render'),
+        'render': incCalls('render'),
+        'switchToMainFrame': incCalls('switch'),
+        'switchToFrame': incCalls('switch'),
+        'options': options
+    };
+
+    if (page){
+        for(var key in page){
+            o.page[key] = page[key];
+        }
+    }
+
+    function incCalls(inc){
+        return function(){
+            if (typeof inc !== 'undefined'){
+                if(typeof o.otherCalls[inc] === 'undefined'){
+                    o.otherCalls[inc] = 0;
+                }
+                o.otherCalls[inc]++;
+            } else {
+                o.calls++;
+            }
+        };
+    }
+
+    o.api = createInstrumentationApi(o.phantom, o.page, o.result, o.options.key);
+
+    return o;
+};
+
 module.exports = {
     'callValidator': internals.applyType('validate'),
     'callPreprocessor': internals.applyType('preprocess'),
     'getTraceObject': internals.getTraceObject,
     'createReporter': internals.createReporter,
+    'createApi': internals.createApi,
     'config': config
 };
