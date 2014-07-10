@@ -14,6 +14,7 @@ module.exports = {
     resourceDomainBase: 'file://',
 
     validatorBase: null,
+    outputDirectory: null,
 
     instrument: [
         // 'errors', // common
