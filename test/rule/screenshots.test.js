@@ -9,7 +9,7 @@ var instrumentation = require('../../lib/rule/instrument/screenshots.js');
 
 describe('Screenshots instrumentation', function () {
 
-    it('should take images forever', function (done) {
+    it('should capture images forever', function (done) {
         var called = 0;
         var options = {
             outputDirectory: '/a',
@@ -22,6 +22,7 @@ describe('Screenshots instrumentation', function () {
             getOptions: function () {
                 return options;
             },
+            set: function(){},
             getPNG: function () {
                 return Math.random() * 1000;
             },

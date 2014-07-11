@@ -216,10 +216,27 @@ describe('Runner (phantomJs)', function() {
         //     });
         // });
 
+
+        var http = require('http');
+        before(function(){
+            this.__port = (process.env.PORT||7070);
+            this.server = http.createServer(function(req, res){
+                res.writeHead(200, {'Content-Type': 'application/javascript'});
+                setTimeout(function(){
+                    res.end('\
+                        console.log(\"testfixture script.js\");\n\
+                        document.write("<div id=\\"banner\\" style=\\"width:100%;height:225px;background:red;color:white;font-size:200px;\\">script.js</div>")'
+                    );
+                }, 200);
+            }).listen(this.__port, '127.0.0.1');
+        });
+
         it('should run with multiple instrumentations', function(done) {
-            this.timeout(3000);
+            this.timeout(6000);
             var options = {
                 'instrument': [
+                    'gardr',
+                    'screenshots',
                     'har',
                     'common',
                     'log', {
@@ -233,25 +250,38 @@ describe('Runner (phantomJs)', function() {
                 ],
                 'validate': [
                     'common',
-                    'log',
-                    'security'
+                    'log'
                 ],
-                'pageRunTime': 100,
+                'pageRunTime': 1000,
+                'scriptUrl': 'http://localhost:'+this.__port+'/script.js',
                 'outputDirectory': os.tmpDir()
             };
             runner.run(options, function(err, result) {
                 if (err) {
                     console.log('TEST RUN ERROR', err);
                 }
+                // unwind stack from runner
                 setTimeout(function() {
                     refute(err);
+                    // console.log(result.log.logs.map(function(a){return a.message}).join('\n'));
+                    assert.equals(result.common.errors.length, 0, 'should not have errors');
+                    assert(result.screenshots, 'expected a screenshots data point');
+                    assert(result.screenshots.onCustomEvent, 'expected to start');
+
+                    assert(result.gardr.dom);
+                    assert.equals(result.gardr.dom.banner.id, 'banner');
+
                     assert(result.log.logs, 'expected a log');
-                    assert(result.security, 'expected a security data point');
                     assert(result.log.logs.length > 0, 'by default phantom main.js should emit logs');
                     assert.equals(result.hooky.spooky, 'wooky', 'results should be namespaced');
                     done();
                 }, 0);
             });
+        });
+
+        after(function(){
+            this.server.close()
+            this.server = null;
         });
 
     });
