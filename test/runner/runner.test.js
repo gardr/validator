@@ -141,7 +141,7 @@ describe('Runner (phantomJs)', function() {
 
         it('should run with default config', function(done) {
             var options = {
-                'pageRunTime': 25,
+                'pageRunTime': 1,
                 'outputDirectory': os.tmpDir()
             };
             var title = this.test.title;
