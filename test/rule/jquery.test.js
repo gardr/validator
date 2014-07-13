@@ -79,18 +79,6 @@ describe('jQuery instrumentation', function () {
 
 var jqueryValidator = require('../../lib/rule/validate/jquery.js');
 
-
-// function shimLatest(nr, cb) {
-//     cb([{ major: 1, minor: 10, patch: 2, sortKey: 11002},
-//         { major: 2, minor: 0,  patch: 3, sortKey: 20003}
-//        ]);
-// }
-// var jqueryPreprocessor = proxyquire('../../lib/rule/preprocess/jquery.js', {
-//     '../lib/getLatestJquery.js': {
-//         'getLatest': shimLatest
-//     }
-// });
-
 describe('jQuery validator', function () {
 
     it('should report error if animate called', function (done) {
