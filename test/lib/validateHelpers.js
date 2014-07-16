@@ -1,5 +1,4 @@
 var hoek = require('hoek');
-var proxyquire = require('proxyquire').noPreserveCache();
 var config = require('../../config/config.js');
 var validate = require('../../lib/validate.js');
 
@@ -11,7 +10,7 @@ internals.getTraceObject = function (name) {
         'name': name + '',
         'time': Date.now(),
         'trace': {
-            sourceURL: 'http://dummyfile.js',
+            sourceURL: 'http://gardr.org/dummyfile.js',
             line: '123'
         }
     };
@@ -21,13 +20,27 @@ internals.createReporter = function (onCallFn) {
     return validate.createReportHelper({}, onCallFn)(this.test.title);
 };
 
+internals.resolveUrlForType = function(type, name){
+    return '../../lib/rule/' + type + '/' + name + '.js';
+};
+
+internals.createOutputter = function(name, data){
+    var module = require(internals.resolveUrlForType('preprocess', name));
+    return validate.createOutputter(module, data);
+};
+
 internals.applyType = function (type) {
+    var proxyquire = require('proxyquire').noPreserveCache();
     return function (name, harvest, reporter, callback, mutateDataFn, proxyquireInject) {
         if (!harvest) {
             throw new Error('Testhelper ' + name + ' needs a harvest object');
         }
         if (!reporter) {
-            throw new Error('Testhelper ' + name + ' needs a reporter');
+            if (type === 'preprocess'){
+                reporter = internals.createOutputter(name, harvest);
+            } else {
+                throw new Error('Testhelper ' + name + ' needs a reporter');
+            }
         }
         if (typeof callback !== 'function') {
             throw new Error('Testhelper ' + name + ' needs a done/callback function. Instead saw:' + (typeof callback));
@@ -38,7 +51,7 @@ internals.applyType = function (type) {
         if (typeof mutateDataFn === 'function') {
             mutateDataFn(context, cloned);
         }
-        var path = '../../lib/rule/' + type + '/' + name + '.js';
+        var path = internals.resolveUrlForType(type, name);
 
         var fn;
 
@@ -48,15 +61,15 @@ internals.applyType = function (type) {
             fn = require(path)[type];
         }
 
-
         fn.call(context, harvest, reporter, callback, cloned, context);
 
+        return reporter;
     };
 };
 
 
 var createInstrumentationApi = require('../../lib/phantom/hooksApi.js');
-internals.createApi = function (page){
+internals.createPhantomHooksApi = function (page){
     var options = {
         'key': (Math.random() * 1000 * Date.now())
     };
@@ -123,6 +136,7 @@ module.exports = {
     'callPreprocessor': internals.applyType('preprocess'),
     'getTraceObject': internals.getTraceObject,
     'createReporter': internals.createReporter,
-    'createApi': internals.createApi,
+    'createOutputter': internals.createOutputter,
+    'createApi': internals.createPhantomHooksApi,
     'config': config
 };

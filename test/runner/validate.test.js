@@ -302,6 +302,45 @@ describe('Validate', function () {
         });
     });
 
+    describe('createoutputter', function(){
+
+        // validatorLib.createoutputter
+
+        it('should output with context predefined', function(){
+            var harvest = {'dummy': {}};
+            var o = validatorLib.createOutputter({
+                dependencies: ['dummy_ignore', 'dummy'],
+                output: 'dummy'
+            }, harvest);
+
+            o('key', 'value');
+            o('key2', 'value2');
+            o('child.key', 'value');
+            assert.equals(harvest.dummy.key, 'value');
+            assert.equals(harvest.dummy.key2, 'value2');
+            assert.equals(harvest.dummy.child.key, 'value');
+        });
+
+        it('should output with context implied to first dependency', function(){
+            var harvest = {'dummy1': {}};
+            var o = validatorLib.createOutputter({
+                dependencies: ['dummy1']
+            }, harvest);
+
+            o('key', 'value');
+            assert.equals(harvest.dummy1.key, 'value');
+        });
+
+        it('should throw when no context provided', function(){
+            var harvest = {'dummy1': {}};
+            var o = validatorLib.createOutputter({}, harvest);
+
+            assert.exception(function(){
+                o('key', 'value');
+            });
+        });
+    });
+
     describe('filterDataByDependencies', function () {
         it('should throw if attempts to change current object', function () {
 
