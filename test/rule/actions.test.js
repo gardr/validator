@@ -65,6 +65,4 @@ describe('Actions', function () {
             done();
         }, 170);
     });
-
-    it.skip('should not collect har/network files after userinteraction');
 });

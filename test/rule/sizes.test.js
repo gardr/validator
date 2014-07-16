@@ -22,116 +22,118 @@ function getHarvestedData() {
         'format': {
             id: 'test'
         },
-        'har': {
-            'rawFileDataSummary': {
-                'total': {
-                    'redirects': 0,
-                    'rawRequests': 4,
-                    'requestErrors': 0,
-                    'requests': 4,
-                    'size': 200,
-                    'fullSize': 200
-                },
-                'tips': {
-                    'possibleCompressTarget': 81960,
-                    'possibleCompressImprovement': 193109,
-                    'possibleCompressWithOnlyScriptGzip': 81960
-                },
-                'typed': {
-                    'summary': {
-                        'script': {
-                            'total': {
-                                'redirects': 1,
-                                'rawRequests': 9,
-                                'requestErrors': 0,
-                                'requests': 10,
-                                'size': 75662,
-                                'fullSize': 203569
-                            },
-                            'tips': {
-                                'possibleCompressTarget': 74754,
-                                'possibleCompressImprovement': 128815,
-                                'possibleCompressWithOnlyScriptGzip': 74754
-                            }
-                        },
-                        'style': {
-                            'total': {
-                                'redirects': 0,
-                                'rawRequests': 0,
-                                'requestErrors': 0,
-                                'requests': 0,
-                                'size': 0,
-                                'fullSize': 0
-                            },
-                            'tips': {
-                                'possibleCompressTarget': 0,
-                                'possibleCompressImprovement': 0,
-                                'possibleCompressWithOnlyScriptGzip': 0
-                            }
-                        },
-                        'image': {
-                            'total': {
-                                'redirects': 0,
-                                'rawRequests': 7,
-                                'requestErrors': 0,
-                                'requests': 7,
-                                'size': 83227,
-                                'fullSize': 83227
-                            },
-                            'tips': {
-                                'possibleCompressTarget': 82773,
-                                'possibleCompressImprovement': 454,
-                                'possibleCompressWithOnlyScriptGzip': 83227
-                            }
-                        },
-                        'other': {
-                            'total': {
-                                'redirects': 0,
-                                'rawRequests': 0,
-                                'requestErrors': 0,
-                                'requests': 0,
-                                'size': 0,
-                                'fullSize': 0
-                            },
-                            'tips': {
-                                'possibleCompressTarget': 0,
-                                'possibleCompressImprovement': 0,
-                                'possibleCompressWithOnlyScriptGzip': 0
-                            }
-                        },
-                        'errors': {
-                            'total': {
-                                'redirects': 0,
-                                'rawRequests': 0,
-                                'requestErrors': 0,
-                                'requests': 0,
-                                'size': 0,
-                                'fullSize': 0
-                            },
-                            'tips': {
-                                'possibleCompressTarget': 0,
-                                'possibleCompressImprovement': 0,
-                                'possibleCompressWithOnlyScriptGzip': 0
-                            }
-                        }
+        har: {
+            'all': {
+                'rawFileDataSummary': {
+                    'total': {
+                        'redirects': 0,
+                        'rawRequests': 4,
+                        'requestErrors': 0,
+                        'requests': 4,
+                        'size': 200,
+                        'fullSize': 200
                     },
-                    'types': {
-                        'script': {
-                            'http://localhost:8000/fixtures/script1.js': getFakeRequest(),
-                            'http://localhost:8000/fixtures/script2.js': getFakeRequest(),
-                            'http://localhost:8000/fixtures/script3.js': getFakeRequest()
+                    'tips': {
+                        'possibleCompressTarget': 81960,
+                        'possibleCompressImprovement': 193109,
+                        'possibleCompressWithOnlyScriptGzip': 81960
+                    },
+                    'typed': {
+                        'summary': {
+                            'script': {
+                                'total': {
+                                    'redirects': 1,
+                                    'rawRequests': 9,
+                                    'requestErrors': 0,
+                                    'requests': 10,
+                                    'size': 75662,
+                                    'fullSize': 203569
+                                },
+                                'tips': {
+                                    'possibleCompressTarget': 74754,
+                                    'possibleCompressImprovement': 128815,
+                                    'possibleCompressWithOnlyScriptGzip': 74754
+                                }
+                            },
+                            'style': {
+                                'total': {
+                                    'redirects': 0,
+                                    'rawRequests': 0,
+                                    'requestErrors': 0,
+                                    'requests': 0,
+                                    'size': 0,
+                                    'fullSize': 0
+                                },
+                                'tips': {
+                                    'possibleCompressTarget': 0,
+                                    'possibleCompressImprovement': 0,
+                                    'possibleCompressWithOnlyScriptGzip': 0
+                                }
+                            },
+                            'image': {
+                                'total': {
+                                    'redirects': 0,
+                                    'rawRequests': 7,
+                                    'requestErrors': 0,
+                                    'requests': 7,
+                                    'size': 83227,
+                                    'fullSize': 83227
+                                },
+                                'tips': {
+                                    'possibleCompressTarget': 82773,
+                                    'possibleCompressImprovement': 454,
+                                    'possibleCompressWithOnlyScriptGzip': 83227
+                                }
+                            },
+                            'other': {
+                                'total': {
+                                    'redirects': 0,
+                                    'rawRequests': 0,
+                                    'requestErrors': 0,
+                                    'requests': 0,
+                                    'size': 0,
+                                    'fullSize': 0
+                                },
+                                'tips': {
+                                    'possibleCompressTarget': 0,
+                                    'possibleCompressImprovement': 0,
+                                    'possibleCompressWithOnlyScriptGzip': 0
+                                }
+                            },
+                            'errors': {
+                                'total': {
+                                    'redirects': 0,
+                                    'rawRequests': 0,
+                                    'requestErrors': 0,
+                                    'requests': 0,
+                                    'size': 0,
+                                    'fullSize': 0
+                                },
+                                'tips': {
+                                    'possibleCompressTarget': 0,
+                                    'possibleCompressImprovement': 0,
+                                    'possibleCompressWithOnlyScriptGzip': 0
+                                }
+                            }
                         },
-                        'style': {
-                            'http://localhost:8000/fixtures/style.css': getFakeRequest('text/css')
-                        },
-                        'image': {
-                            'http://...': getFakeRequest('image/png')
-                        },
-                        'other': {
-                            'http://...': getFakeRequest('text/plain')
-                        },
-                        'errors': {
-                            'http://...': getFakeRequest('text/html')
+                        'types': {
+                            'script': {
+                                'http://localhost:8000/fixtures/script1.js': getFakeRequest(),
+                                'http://localhost:8000/fixtures/script2.js': getFakeRequest(),
+                                'http://localhost:8000/fixtures/script3.js': getFakeRequest()
+                            },
+                            'style': {
+                                'http://localhost:8000/fixtures/style.css': getFakeRequest('text/css')
+                            },
+                            'image': {
+                                'http://...': getFakeRequest('image/png')
+                            },
+                            'other': {
+                                'http://...': getFakeRequest('text/plain')
+                            },
+                            'errors': {
+                                'http://...': getFakeRequest('text/html')
+                            }
                         }
                     }
                 }
@@ -176,19 +178,21 @@ describe('Sizes validator', function () {
 
         var harvested = {
             'har': {
-                'rawFileDataSummary': {
-                    'total': {
-                        'redirects': 0,
-                        'rawRequests': 4,
-                        'requestErrors': 0,
-                        'requests': 4,
-                        'size': 99940,
-                        'fullSize': 275069
-                    },
-                    'tips': {
-                        'possibleCompressTarget': 81960,
-                        'possibleCompressImprovement': 193109,
-                        'possibleCompressWithOnlyScriptGzip': 81960
+                'all': {
+                    'rawFileDataSummary': {
+                        'total': {
+                            'redirects': 0,
+                            'rawRequests': 4,
+                            'requestErrors': 0,
+                            'requests': 4,
+                            'size': 99940,
+                            'fullSize': 275069
+                        },
+                        'tips': {
+                            'possibleCompressTarget': 81960,
+                            'possibleCompressImprovement': 193109,
+                            'possibleCompressWithOnlyScriptGzip': 81960
+                        }
                     }
                 }
             }
@@ -216,19 +220,21 @@ describe('Sizes validator', function () {
     it('should report on oversize', function (done) {
         var harvested = {
             'har': {
-                'rawFileDataSummary': {
-                    'total': {
-                        'redirects': 0,
-                        'rawRequests': 4,
-                        'requestErrors': 0,
-                        'requests': 4,
-                        'size': 99940,
-                        'fullSize': 275069
-                    },
-                    'tips': {
-                        'possibleCompressTarget': 81960,
-                        'possibleCompressImprovement': 193109,
-                        'possibleCompressWithOnlyScriptGzip': 81960
+                'all': {
+                    'rawFileDataSummary': {
+                        'total': {
+                            'redirects': 0,
+                            'rawRequests': 4,
+                            'requestErrors': 0,
+                            'requests': 4,
+                            'size': 99940,
+                            'fullSize': 275069
+                        },
+                        'tips': {
+                            'possibleCompressTarget': 81960,
+                            'possibleCompressImprovement': 193109,
+                            'possibleCompressWithOnlyScriptGzip': 81960
+                        }
                     }
                 }
             }
