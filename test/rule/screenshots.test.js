@@ -45,7 +45,7 @@ describe('Screenshots instrumentation', function () {
                 }
             }
         };
-
+        instrumentation.onCustomEvent({name: 'gardrInit'}, api, defaults);
         instrumentation.onPageOpen(api, defaults);
 
         global.window = 0;
