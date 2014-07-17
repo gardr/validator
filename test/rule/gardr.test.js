@@ -31,11 +31,11 @@ describe('Gardr instrumentation', function () {
 
     function toElem(n){
         n = n.split('#');
-        return {'tagName': n[0], 'id': n[1]};
+        return {'tagName': n[0], 'id': n[1], getAttribute: function(){}};
     }
 
     function createRoot(input){
-        return {'children': input.map(toElem)};
+        return {'children': input.map(toElem), getAttribute: function(){}};
     }
 
     [ createRoot(['style', 'script', 'div#correct', 'div']),
