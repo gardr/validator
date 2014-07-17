@@ -1,12 +1,10 @@
 var referee = require('referee');
 var assert = referee.assert;
-//var refute = referee.refute;
 
 var help    = require('../lib/validateHelpers.js');
 var HOOKS   = require('../../lib/phantom/createHooks.js').HOOKS;
 
 var instrumentation   = require('../../lib/rule/instrument/timers.js');
-var timers  = require('../../lib/rule/validate/timers.js');
 
 function getTraceList(targetNum, i){
     var res = [];
@@ -85,7 +83,7 @@ describe('timers validator', function () {
 
         var reporter = help.createReporter.call(this);
 
-        timers.validate(harvested, reporter, function () {
+        help.callValidator('timers', harvested, reporter, function () {
             assert.equals(reporter.getResult().error.length, 0);
             done();
         });
@@ -103,7 +101,7 @@ describe('timers validator', function () {
 
         var reporter = help.createReporter.call(this);
 
-        timers.validate(harvested, reporter, function () {
+        help.callValidator('timers', harvested, reporter, function () {
             var result = reporter.getResult();
             assert.equals(result.error.length, 1);
             var errorObject = result.error[0];
@@ -127,7 +125,7 @@ describe('timers validator', function () {
 
         var reporter = help.createReporter.call(this);
 
-        timers.validate(harvested, reporter, function () {
+        help.callValidator('timers', harvested, reporter, function () {
             assert.equals(reporter.getResult().error.length, 2);
             done();
         });
