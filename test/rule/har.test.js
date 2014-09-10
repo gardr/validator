@@ -141,7 +141,9 @@ describe('HAR preprocessor', function () {
         };
 
         var outputFn = help.createOutputter('har', harvested);
-        var mutateDataFn = null;
+        function mutateOptions(context, config){
+            config.config.har.checkTls = false;
+        }
         var mock = {};
 
         help.callPreprocessor('har', harvested, outputFn, function () {
@@ -173,7 +175,7 @@ describe('HAR preprocessor', function () {
             // assert(false, 'TEST_CASE_NOT_DONE');
 
             done();
-        }, mutateDataFn, mock);
+        }, mutateOptions, mock);
     });
 
 
@@ -242,7 +244,11 @@ describe('HAR preprocessor', function () {
 
         var outputFn = help.createOutputter('har', harvested);
 
-        help.callPreprocessor('har', harvested, outputFn, runTests);
+        function mutateOptions(context, config){
+            config.config.har.checkTls = false;
+        }
+
+        help.callPreprocessor('har', harvested, outputFn, runTests, mutateOptions);
 
         function runTests() {
             function get(key) {
@@ -278,6 +284,75 @@ describe('HAR preprocessor', function () {
 
             done();
         }
+    });
+
+    function tlsHelper(statusCode, done, mutateDataFn) {
+        var harvested = {
+            'har': {
+                input: {
+                    resources: [
+                        genReq('http://domain.com')(),
+                        genReq()()
+                    ],
+                    startTime: null,
+                    endTime: null
+                }
+            },
+            'actions': {
+                actionTime: Date.now()
+            }
+        };
+
+        var outputFn = help.createOutputter('har', harvested);
+
+        var proxyquire = require('proxyquire');
+        var i = 0;
+        var mock = {
+            '../../createHAR.js': function (options, _input) {
+                return _input;
+            },
+            './processResources.js': proxyquire('../../lib/rule/preprocess/processResources.js', {
+                'request': function(url, options, cb){
+                    if (url.indexOf('https') === 0){
+                        i++;
+                    }
+                    cb(null, {statusCode: statusCode, request: {redirects: []}, headers: []}, 'dummy');
+                }
+            })
+        };
+
+        help.callPreprocessor('har', harvested, outputFn, function () {
+            done(harvested, i);
+        }, mutateDataFn, mock);
+    }
+
+    it('should report on tls requests', function (done) {
+        tlsHelper(200, function(harvested, httpsMatches){
+            assert.equals(httpsMatches, 2);
+            assert.equals(harvested.har.validTls, true);
+            assert.equals(harvested.har.failingUrls.length, 0);
+            done();
+        });
+    });
+
+    it('should report on failing tls requests', function (done) {
+        tlsHelper(404, function(harvested, httpsMatches){
+            assert.equals(httpsMatches, 2);
+            assert.equals(harvested.har.validTls, false);
+            assert.equals(harvested.har.failingUrls.length, 2);
+            done();
+        });
+    });
+
+    it('should not report if false checkTls', function (done) {
+        tlsHelper(200, function(harvested, httpsMatches){
+            assert.equals(httpsMatches, 0);
+            assert.equals(harvested.har.validTls, undefined);
+            assert.equals(harvested.har.failingUrls, undefined);
+            done();
+        }, function (context, config){
+            config.config.har.checkTls = false;
+        });
     });
 
 });

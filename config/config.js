@@ -44,6 +44,7 @@ module.exports = {
         'codeUsage',
         'touch',
         'security',
+        'tls',
         'pagespeed'
     ],
 

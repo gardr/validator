@@ -189,20 +189,33 @@ describe('Gardr validator', function () {
                     }
                 }
             },
-            'actions': {}
+            'actions': {
+            }
         };
 
         var reporter = help.createReporter.call(this);
 
         help.callValidator('gardr', harvest, reporter, function () {
             var result = reporter.getResult();
-            assert.equals(result.error.length, 4);
+            assert.equals(result.error.length, 5);
             done();
         });
 
     });
 
-    function getValid(clickHandler) {
+    function getValid(clickHandler, noWindowOpen) {
+        var windowOpened = (noWindowOpen ? null : [
+             {
+              'target': typeof noWindowOpen === 'string' ? noWindowOpen : 'new_window',
+              'time': 1410339022195,
+              'trace': {
+                'function': 'onclick',
+                'line': 19,
+                'sourceURL': 'http://...'
+              },
+              'url': 'http://...'
+            }
+        ]);
         return {
             'gardr': {
                 'data': {
@@ -240,7 +253,9 @@ describe('Gardr validator', function () {
                     }
                 }
             },
-            actions: {}
+            actions: {
+                windowOpened: windowOpened
+            }
         };
     }
 
@@ -266,14 +281,14 @@ describe('Gardr validator', function () {
 
     it('should error on missing clickhandler', function (done) {
 
-        var harvest = getValid();
+        var harvest = getValid(null, true);
 
         var reporter = help.createReporter.call(this);
 
         help.callValidator('gardr', harvest, reporter, function () {
             var result = reporter.getResult();
 
-            assert.equals(result.error.length, 1);
+            assert.equals(result.error.length, 2);
             done();
         });
 
@@ -303,12 +318,12 @@ describe('Gardr validator', function () {
     });
 
     it('should error on invalid ref', function (done) {
-        var harvest = getValid('function(){open(url, "_blank");}');
+        var harvest = getValid('function(){open(url, "_blank");}', '_blank');
         var reporter = help.createReporter.call(this);
 
         help.callValidator('gardr', harvest, reporter, function () {
             var result = reporter.getResult();
-            assert.equals(result.error.length, 1);
+            assert.equals(result.error.length, 2);
             done();
         });
 
@@ -316,14 +331,13 @@ describe('Gardr validator', function () {
 
     it('should error on invalid window target', function (done) {
 
-        var harvest = getValid('window.open(url, "_blank")');
+        var harvest = getValid('window.open(url, "_blank")', '_blank');
 
         var reporter = help.createReporter.call(this);
 
         help.callValidator('gardr', harvest, reporter, function () {
             var result = reporter.getResult();
-
-            assert.equals(result.error.length, 1);
+            assert.equals(result.error.length, 2);
             done();
         });
     });

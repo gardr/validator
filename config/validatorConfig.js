@@ -51,6 +51,10 @@ module.exports = {
         checkUrl: true,
         apiKey: process.env['GOOG_SAFE_BROWSE_API_KEY']
     },
+    har: {
+        checkTls: true,
+        errorOnTls: false
+    },
     sizes: {
         //refetchResources: true, // processReources.js
         //filterAfterUserInteraction: true, // onHalfTime triggers actions
