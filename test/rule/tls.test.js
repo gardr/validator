@@ -113,4 +113,35 @@ describe('TLS validator', function () {
         }, mutateOptions);
     });
 
+
+    it('should report failing urls with errorMessage', function (done) {
+        var domain = 'https://domain.com';
+        var harvest = {
+            har: {
+                validTls: false,
+                failingUrls: [{
+                    url: domain,
+                    errorMessage: 'asd',
+                    responseCode: undefined
+                }]
+            }
+        };
+
+        function mutateOptions(context, config){
+            config.config.har.errorOnTls = true;
+        }
+
+        var reporter = help.createReporter.call(this);
+        help.callValidator('tls', harvest, reporter, function () {
+            var result = reporter.getResult();
+            assert.equals(result.error.length, 1);
+
+            var entry = result.error[0].data.list[0];
+            assert(entry.indexOf(domain) === 0);
+            assert(entry.indexOf('asd') === entry.length - 3);
+            done();
+        }, mutateOptions);
+    });
+
+
 });

@@ -286,14 +286,15 @@ describe('HAR preprocessor', function () {
         }
     });
 
-    function tlsHelper(statusCode, done, mutateDataFn) {
+    function tlsHelper(statusCode, done, mutateDataFn, resources) {
+        resources = resources||[
+            genReq('http://domain.com')(),
+            genReq()()
+        ];
         var harvested = {
             'har': {
                 input: {
-                    resources: [
-                        genReq('http://domain.com')(),
-                        genReq()()
-                    ],
+                    resources: resources,
                     startTime: null,
                     endTime: null
                 }
@@ -353,6 +354,16 @@ describe('HAR preprocessor', function () {
         }, function (context, config){
             config.config.har.checkTls = false;
         });
+    });
+
+    it('should not report if empty set', function(done){
+        tlsHelper(200, function(harvested, httpsMatches){
+            assert.equals(httpsMatches, 0);
+            assert.equals(harvested.har.validTls, true);
+            done();
+        }, function (context, config){
+            config.config.har.checkTls = true;
+        }, []);
     });
 
 });
