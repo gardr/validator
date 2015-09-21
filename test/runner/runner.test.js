@@ -140,6 +140,7 @@ describe('Runner (phantomJs)', function() {
         var os = require('os');
 
         it('should run with default config', function(done) {
+            this.timeout(3000);
             var options = {
                 'pageRunTime': 1,
                 'outputDirectory': os.tmpDir()
