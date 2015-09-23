@@ -90,7 +90,7 @@ describe('timers validator', function () {
 
     });
 
-    it('should generate an error', function (done) {
+    it('should generate an info', function (done) {
         var harvested = {
             'timers': {
                 setTimeout: [
@@ -103,15 +103,15 @@ describe('timers validator', function () {
 
         help.callValidator('timers', harvested, reporter, function () {
             var result = reporter.getResult();
-            assert.equals(result.error.length, 1);
-            var errorObject = result.error[0];
-            assert.isString(errorObject.message);
+            assert.equals(result.error.length, 0);
+            assert.equals(result.info.length, 1);
+
             done();
         });
 
     });
 
-    it('should generate multiple errors', function (done) {
+    it('should generate multiple info entries', function (done) {
         var harvested = {
             'timers': {
                 setTimeout: [
@@ -126,7 +126,7 @@ describe('timers validator', function () {
         var reporter = help.createReporter.call(this);
 
         help.callValidator('timers', harvested, reporter, function () {
-            assert.equals(reporter.getResult().error.length, 2);
+            assert.equals(reporter.getResult().info.length, 2);
             done();
         });
 
