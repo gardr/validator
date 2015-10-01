@@ -53,7 +53,7 @@ module.exports = {
     },
     har: {
         checkTls: true,
-        errorOnTls: false
+        errorOnTls: true
     },
     sizes: {
         //refetchResources: true, // processReources.js
