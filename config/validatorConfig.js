@@ -38,6 +38,7 @@ module.exports = {
         wrapAnimate: true
     },
     log: {
+        errorOnConsole: true
         //output logs to view maybe?
     },
     pagespeed: {
