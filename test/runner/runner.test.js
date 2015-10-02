@@ -8,7 +8,7 @@ var proxyquire = require('proxyquire').noPreserveCache();
 var HOOKY_PATH = path.resolve(path.join(__dirname, 'fixtures', 'customhook',
     'hooky.js'));
 
-describe('Runner (phantomJs)', function() {
+describe('Mocked Runner', function() {
     var EXPECTED_VALID_REPORT_OBJECT = {
         'path': 'DUMMY',
         'key1': {},
@@ -134,108 +134,202 @@ describe('Runner (phantomJs)', function() {
         });
 
     });
+});
 
-    describe('full tests', function() {
-        var runner = require('../../lib/index.js');
-        var os = require('os');
+describe.only('Runner full tests', function() {
+    var runner = require('../../lib/index.js');
+    var os = require('os');
 
-        it('should run with default config', function(done) {
-            this.timeout(3000);
-            var options = {
-                'pageRunTime': 1,
-                'outputDirectory': os.tmpDir()
-            };
-            var title = this.test.title;
-            runner.run(options, function(err, result) {
-                if (err) {
-                    console.log('\n' + title +' :TEST RUN ERROR:\n', err);
-                }
-                setTimeout(function() {
-                    refute(err);
-                    assert(result);
-                    done();
-                }, 0);
+    it('should run with default config', function(done) {
+        this.timeout(3000);
+        var options = {
+            'pageRunTime': 1,
+            'outputDirectory': os.tmpDir()
+        };
+        var title = this.test.title;
+        runner.run(options, function(err, result) {
+            if (err) {
+                console.log('\n' + title +' :TEST RUN ERROR:\n', err);
+            }
+            setTimeout(function() {
+                refute(err);
+                assert(result);
+                result.har.failingUrls.forEach(function(entry){
+                    assert.equals(entry, null, 'should not have failing url:'+ entry.url);
+                });
+                done();
+            }, 0);
+        });
+    });
+
+    it('should run with log instrumentation', function(done) {
+        this.timeout(3000);
+        var title = this.test.title;
+        var options = {
+            'instrument': ['log'],
+            'preprocess': ['log'],
+            'validate': ['log'],
+            'pageRunTime': 25,
+            'outputDirectory': os.tmpDir()
+        };
+        runner.run(options, function(err, result) {
+            if (err) {
+                console.log('\n' + title +' :TEST RUN ERROR:\n', err);
+            }
+
+            setTimeout(function() {
+                refute(err);
+                assert(result.log, 'expect log object');
+                assert(result.log.logs,
+                    'expected a log');
+                done();
+            }, 0);
+        });
+    });
+
+    // it('should run with bugged code', function(done){
+    //     var baseTime = 10000;
+    //     this.timeout(baseTime + 5000);
+    //     var tmps = os.tmpDir();
+    //     var options = {
+    //         'instrument': [
+    //             'timers',
+    //             'gardr',
+    //             'log'
+    //         ],
+    //         'preprocess': [],
+    //         'validate': [
+    //             'timers'
+    //         ],
+    //         'pageRunTime': baseTime,
+    //         'outputDirectory': tmps,
+    //         'scriptUrl': 'http://localhost:8000/user-entry.js?id=6cca6201-a33e-410c-9353-124b9aaffda6-131158-000006&timestamp=1402653620259'
+    //     };
+    //     runner.run(options, function (err, result) {
+    //         if (err) {
+    //             console.log('TEST RUN ERROR', err);
+    //         }
+    //         console.log('\n-------------------');
+    //         console.log(tmps);
+    //         console.log('\n-------------------');
+    //         console.log(result);
+    //         console.log('\n-------------------');
+    //         console.log(result.timers.setTimeout[0].length);
+    //         console.log(result.timers.clearTimeout[0]);
+    //
+    //         done();
+    //     });
+    // });
+
+
+    var http = require('http');
+    var fs = require('fs');
+    before(function(){
+        this.__port = (process.env.PORT||7070);
+        this.server = http.createServer(function(req, res){
+            //console.log('req', req.headers);
+            var filePath;
+            if (req.url.indexOf('script3.js') > -1) {
+                filePath = path.join(__dirname, '/fixtures/script3.js');
+            } else if (req.url.indexOf('script2.js') > -1) {
+                filePath = path.join(__dirname, '/fixtures/script2.js');
+            } else {
+                filePath = path.join(__dirname, '/fixtures/script1.js');
+            }
+
+            var stat = fs.statSync(filePath);
+
+            res.writeHead(200, {
+                'Content-Type': 'application/javascript',
+                'Content-Length': stat.size
             });
-        });
 
-        it('should run with log instrumentation', function(done) {
-            this.timeout(3000);
-            var title = this.test.title;
-            var options = {
-                'instrument': ['log'],
-                'preprocess': ['log'],
-                'validate': ['log'],
-                'pageRunTime': 25,
-                'outputDirectory': os.tmpDir()
-            };
-            runner.run(options, function(err, result) {
-                if (err) {
-                    console.log('\n' + title +' :TEST RUN ERROR:\n', err);
+            var readStream = fs.createReadStream(filePath);
+            readStream.pipe(res);
+            //console.log('send file', filePath);
+        }).listen(this.__port, '127.0.0.1');
+    });
+
+    it('should run with action instrumentation', function(done) {
+        this.timeout(6000);
+        var options = {
+            'config': {
+                har: {
+                    checkTls: false
                 }
+            },
+            'instrument': [
+                'actions',
+                //'gardr',
+                'har',
+                'common',
+                'log'
+            ],
+            'preprocess': [
+                'har',
+                'log'
+            ],
+            'validate': [
+                'gardr',
+                'common',
+                'log'
+            ],
+            'pageRunTime': 3000,
+            'scriptUrl': 'http://localhost:' + this.__port + '/script2.js?' + this.test.title,
+            'outputDirectory': os.tmpDir()
+        };
 
-                setTimeout(function() {
-                    refute(err);
-                    assert(result.log, 'expect log object');
-                    assert(result.log.logs,
-                        'expected a log');
-                    done();
-                }, 0);
-            });
+        //console.log(Object.keys(this.t est));
+        runner.run(options, function(err, result) {
+            if (err) {
+                console.log('TEST RUN ERROR', err);
+            }
+            // unwind stack from runner
+            setTimeout(function() {
+                refute(err);
+
+                result.har.failingUrls.forEach(function(entry){
+                    assert.equals(entry, null, 'should not have failing url:'+ entry.url);
+                });
+
+                if (result.common.errors.length > 0 && result.common.errors[0]) {
+                    console.log('logs:\n', result.log.logs.map(function(a){return a.message}).join('\n'));
+                    console.log('userlogs:\n', result.log.userLogs.map(function(a){return a.message}).join('\n'));
+                    console.log('res',  result.common.errors[0], result.common.errors[0].trace);
+                }
+                assert.equals(result.common.errors.length, 0, 'should not have errors');
+
+                assert(result.actions);
+                //console.log('result.actions', result.actions);
+                //console.log('result.gardr', result);
+                assert(result.log.logs, 'expected a log');
+                assert(result.log.logs.length > 0, 'by default phantom main.js should emit logs');
+                done();
+            }, 0);
         });
+    });
 
-        // it('should run with bugged code', function(done){
-        //     var baseTime = 10000;
-        //     this.timeout(baseTime + 5000);
-        //     var tmps = os.tmpDir();
-        //     var options = {
-        //         'instrument': [
-        //             'timers',
-        //             'gardr',
-        //             'log'
-        //         ],
-        //         'preprocess': [],
-        //         'validate': [
-        //             'timers'
-        //         ],
-        //         'pageRunTime': baseTime,
-        //         'outputDirectory': tmps,
-        //         'scriptUrl': 'http://localhost:8000/user-entry.js?id=6cca6201-a33e-410c-9353-124b9aaffda6-131158-000006&timestamp=1402653620259'
-        //     };
-        //     runner.run(options, function (err, result) {
-        //         if (err) {
-        //             console.log('TEST RUN ERROR', err);
-        //         }
-        //         console.log('\n-------------------');
-        //         console.log(tmps);
-        //         console.log('\n-------------------');
-        //         console.log(result);
-        //         console.log('\n-------------------');
-        //         console.log(result.timers.setTimeout[0].length);
-        //         console.log(result.timers.clearTimeout[0]);
-        //
-        //         done();
-        //     });
-        // });
-
-
-        var http = require('http');
-        before(function(){
-            this.__port = (process.env.PORT||7070);
-            this.server = http.createServer(function(req, res){
-                res.writeHead(200, {'Content-Type': 'application/javascript'});
-                setTimeout(function(){
-                    res.end('\
-                        console.log(\"testfixture script.js\");\n\
-                        document.write("<div id=\\"banner\\" style=\\"width:100%;height:225px;background:red;color:white;font-size:200px;\\">script.js</div>")'
-                    );
-                }, 200);
-            }).listen(this.__port, '127.0.0.1');
-        });
-
-        it('should run with multiple instrumentations', function(done) {
+    [{
+        name: '1',
+        errors: 2
+    }, {
+        name: '2',
+        errors: 1
+    }, {
+        name: '3',
+        errors: 0
+    }].forEach(function(o){
+        var index = o.name;
+        it('should run with multiple instrumentations testrun ' + index, function(done) {
             this.timeout(6000);
             var options = {
+                'config': {
+                    har: {
+                        checkTls: false
+                    }
+                },
                 'instrument': [
+                    'actions',
                     'gardr',
                     'screenshots',
                     'har',
@@ -253,24 +347,40 @@ describe('Runner (phantomJs)', function() {
                     'common',
                     'log'
                 ],
-                'pageRunTime': 1000,
-                'scriptUrl': 'http://localhost:'+this.__port+'/script.js',
+                'pageRunTime': 2000,
+                'scriptUrl': 'http://localhost:'+this.__port+'/script'+index+'.js?' + this.test.title,
                 'outputDirectory': os.tmpDir()
             };
-            runner.run(options, function(err, result) {
+            runner.run(options, function(err, result, report) {
                 if (err) {
                     console.log('TEST RUN ERROR', err);
                 }
                 // unwind stack from runner
                 setTimeout(function() {
                     refute(err);
-                    // console.log(result.log.logs.map(function(a){return a.message}).join('\n'));
+
+                    assert.equals(report.error.length, o.errors, 'should have ' + o.errors + ' errors');
+                    report.error.forEach(function(errorEntry) {
+                        assert.equals(errorEntry.validatorName, 'log');
+                    });
+                    result.har.failingUrls.forEach(function(entry) {
+                        assert.equals(entry, null, 'should not have failing url:'+ entry.url);
+                    });
+                    // console.log(result.log.userLogs.map(function(a){
+                    //     return a.message.replace('!internal ', '');
+                    // }).join('\n'));
+
+                    if (result.common.errors && result.common.errors.length > 0) {
+                        console.log('errors:', result.common.errors);
+                    }
+                    //console.log(report);
                     assert.equals(result.common.errors.length, 0, 'should not have errors');
                     assert(result.screenshots, 'expected a screenshots data point');
                     assert(result.screenshots.onCustomEvent, 'expected to start');
 
+                    //console.log('result.gardr.dom:\n', JSON.stringify(result.gardr, null, 4 ));
                     assert(result.gardr.dom);
-                    assert.equals(result.gardr.dom.banner.id, 'banner');
+                    assert.equals(result.gardr.dom.banner.id, 'banner' + index);
 
                     assert(result.log.logs, 'expected a log');
                     assert(result.log.logs.length > 0, 'by default phantom main.js should emit logs');
@@ -279,12 +389,12 @@ describe('Runner (phantomJs)', function() {
                 }, 0);
             });
         });
+    });
 
-        after(function(){
-            this.server.close()
-            this.server = null;
-        });
 
+    after(function(done){
+        this.server.close(done)
+        this.server = null;
     });
 
 });
