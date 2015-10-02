@@ -360,14 +360,6 @@ describe('Validate', function () {
             refute.equals(o.common.deep.inner.key3, 'value3');
         });
 
-        it('deepFreeze should not try to freeze nonobjects', function(){
-            var i = 123;
-            assert.exception(function(){
-                validatorLib.deepFreeze(i);
-            });
-
-        });
-
         it('should default to common if missing dependencies', function(){
             var o = validatorLib.filterDataByDependencies({common: {}}, null, 'test');
             assert(Object.isFrozen(o));
