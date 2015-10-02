@@ -9,6 +9,14 @@ describe('wrapElement', function(){
             wrapElement();
         });
     });
+    var realConsole = global.console;
+    before(function() {
+        global.console = {log: function(){}};
+    });
+
+    after(function(){
+        global.console = realConsole;
+    });
 
     it('should run and wrap Element.prototype.addEventListener', function(done){
         var calledSet = false;

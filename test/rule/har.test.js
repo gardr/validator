@@ -148,10 +148,7 @@ describe('HAR preprocessor', function () {
 
         help.callPreprocessor('har', harvested, outputFn, function () {
 
-            // console.log(harvested.har);
-
             assert(harvested.har.file, 'file should be outputted');
-            // console.log('TEST harvested:', harvested.har);
 
             assert(harvested.har.file.log.entries, 'should have an filtered entries array');
             assert.equals(5, harvested.har.file.log.entries.length);
@@ -349,7 +346,7 @@ describe('HAR preprocessor', function () {
         tlsHelper(200, function(harvested, httpsMatches){
             assert.equals(httpsMatches, 0);
             assert.equals(harvested.har.validTls, undefined);
-            assert.equals(harvested.har.failingUrls, undefined);
+            assert.equals(harvested.har.failingUrls, []);
             done();
         }, function (context, config){
             config.config.har.checkTls = false;
