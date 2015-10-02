@@ -6,14 +6,10 @@ lib-cov
 *.out
 *.pid
 *.gz
-
 pids
 logs
 node_modules
 .tern-port
-
 npm-debug.log
 node_modules
 coverage
-
-lib/phantom/resources/built/*
