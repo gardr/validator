@@ -40,6 +40,7 @@ module.exports = {
         'timers',
         'jquery',
         'gardr',
+        'cookies',
         'sizes',
         'codeUsage',
         'touch',
