@@ -46,7 +46,7 @@ describe('CSS instrumentation', function () {
 
 var help = require('../lib/validateHelpers.js');
 
-describe('CSS validator', function(){
+describe.only('CSS validator', function(){
 
     it('should allow @font-face', function(done){
         var harvest = {
@@ -70,14 +70,15 @@ describe('CSS validator', function(){
         });
     });
 
-    it('should fail on tag styling', function(done){
+    it('should not fail on classname', function(done){
         var harvest = {
             css : {
                 styles: [
-                    'body {background:red;}',
-                    'p{background: red;}html{background:blue;}',
-                    'should filter out {margin: 0}',
-                    '.classname {background: orange;}'
+                    '#id {background:red;}',
+                    'div#id, div h1 #asd {color: white;}',
+                    'video.HYPE_element {margin: 0; color: red;}',
+                    '.classname, div span .classname {background: orange;}'
+
                 ],
             },
             har: {
@@ -90,7 +91,34 @@ describe('CSS validator', function(){
         help.callValidator('css', harvest, reporter, function(){
             var result = reporter.getResult();
             assert.equals(
-                result.error.length, 3, 'should filter tags with usages except margin/padding');
+                result.error.length, 0, 'should not error on valid selectors');
+            done();
+        });
+
+    });
+
+    it('should fail on tag styling', function(done){
+        var harvest = {
+            css : {
+                styles: [
+                    'body {background:red; color: white}',
+                    'p {background: red;} html{background:blue;color: red;}',
+                    'should filter out {margin: 0}',
+                    '.classname {background: orange;}',
+                    'violation {color: red}'
+                ],
+            },
+            har: {
+                file: {}
+            }
+        };
+
+        var reporter = help.createReporter.call(this);
+
+        help.callValidator('css', harvest, reporter, function(){
+            var result = reporter.getResult();
+            assert.equals(
+                result.error.length, 4, 'should filter tags with usages except margin/padding');
             done();
         });
 
