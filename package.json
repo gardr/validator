@@ -24,7 +24,7 @@
     "estraverse": "^1.5.0",
     "gardr-ext": "1.0.0-alpha.6",
     "gardr-host": "1.0.0-alpha.9",
-    "gpagespeed": "0.0.6",
+    "gpagespeed": "^3.0.0",
     "hoek": "^2.3.0",
     "joi": "^4.6.1",
     "lodash": "^2.4.1",
