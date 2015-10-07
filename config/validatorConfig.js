@@ -30,7 +30,7 @@ module.exports = {
         // takes input from viewportOptions
         iframeNotAllowed: true,
         enforceStyling: true,
-        enforceSpec: true,
+        //enforceSpec: true, <- old 
         illegalTags: ['meta[name=\"viewport\"]']
     },
     jquery: {
