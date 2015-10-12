@@ -11,7 +11,7 @@ describe('createHooks', function () {
 
     it('should should populate page object with keys (hooks/pageevents)', function () {
         var fixture = __dirname + '/fixtures/hook.js';
-        var expectedLength = Object.keys(require(fixture)).length;
+        var expectedLength = Object.keys(require(fixture)).length - 1; // -1 is for defaults
 
         var page = {};
         var options = {
@@ -101,6 +101,42 @@ describe('createHooks', function () {
 
                 assert.equals(api.name, 'common');
                 assert.equals(api.getGlobalResult()[testTitle].key, 'value');
+                done();
+            };
+        }
+
+    });
+
+
+    it('should should set defaults', function (done) {
+        var page = {};
+        var testTitle = this.test.title;
+        var api = baseApi.createSubContext('common');
+        var options = {
+            instrument: [{
+                name: testTitle,
+                'defaults': function() {
+                    return {
+                        key1: 'value1',
+                        someValue: Date.now()
+                    };
+                },
+                onBeforeExit: function (_api) {
+                    setTimeout(finish(_api), 1);
+                }
+            }]
+        };
+        var trigger = createHooks(page, options, api);
+
+        trigger('onBeforeExit');
+
+        function finish(_api) {
+            return function () {
+                _api.set('key2', 'value2');
+                var d = api.getGlobalResult()[testTitle];
+                assert(d.someValue);
+                assert.equals(d.key2, 'value2');
+                assert.equals(d.key1, 'value1');
                 done();
             };
         }
