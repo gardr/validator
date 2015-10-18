@@ -30,10 +30,12 @@ module.exports = {
         // 'touch'
     ],
     preprocess: [
+        'actions',
         'screenshots',
         'har'
     ],
     validate : [
+        'actions',
         'common',
         'log' ,
         'css' ,

@@ -136,7 +136,7 @@ describe('Mocked Runner', function() {
     });
 });
 
-describe.only('Runner full tests', function() {
+describe('Runner full tests', function() {
     var runner = require('../../lib/index.js');
     var os = require('os');
 
@@ -309,13 +309,13 @@ describe.only('Runner full tests', function() {
         });
     });
 
-    [{
+    [/*{
         name: '1',
         errors: 2
     }, {
         name: '2',
         errors: 1
-    }, {
+    },*/ {
         name: '3',
         errors: 0
     }].forEach(function(o){
@@ -329,6 +329,7 @@ describe.only('Runner full tests', function() {
                     }
                 },
                 'instrument': [
+                    'cookies',
                     'actions',
                     'gardr',
                     'screenshots',
@@ -344,6 +345,7 @@ describe.only('Runner full tests', function() {
                     'log'
                 ],
                 'validate': [
+                    'cookies',
                     'common',
                     'log'
                 ],
@@ -359,21 +361,30 @@ describe.only('Runner full tests', function() {
                 setTimeout(function() {
                     refute(err);
 
-                    assert.equals(report.error.length, o.errors, 'should have ' + o.errors + ' errors');
+                    assert.equals(report.error.length, o.errors,
+                        'should have ' + o.errors + ' errors: ' + JSON.stringify(report.error, null, 4));
                     report.error.forEach(function(errorEntry) {
                         assert.equals(errorEntry.validatorName, 'log');
                     });
+
                     result.har.failingUrls.forEach(function(entry) {
                         assert.equals(entry, null, 'should not have failing url:'+ entry.url);
                     });
-                    // console.log(result.log.userLogs.map(function(a){
-                    //     return a.message.replace('!internal ', '');
-                    // }).join('\n'));
+
+                    console.log(report);
+                    console.log('result.cookies', result.cookies);
+                    //console.log(result.actions);
+                    //console.log(result.gardr);
+
+                    console.log('!-------');
+                    console.log(result.log.userLogs.map(function(a){
+                        return a.message.replace('!internal ', '');
+                    }).join('\n'));
+                    console.log('-------|');
 
                     if (result.common.errors && result.common.errors.length > 0) {
-                        console.log('errors:', result.common.errors);
+                        console.error('errors:', result.common.errors);
                     }
-                    //console.log(report);
                     assert.equals(result.common.errors.length, 0, 'should not have errors');
                     assert(result.screenshots, 'expected a screenshots data point');
                     assert(result.screenshots.onCustomEvent, 'expected to start');

@@ -69,13 +69,30 @@ describe('Security', function() {
                 };
             }
 
+            function getNavObj(url) {
+                return {
+                    url: url
+                };
+            }
+
             var harvested = {
+                actions: {
+                    navigations: [
+                        getNavObj('http://domain1.com'),
+                        getNavObj('http://domain4.com')
+                    ],
+                    illegalNavigations: [
+                        getNavObj('http://domain4.com'),
+                        getNavObj('http://domain3.com')
+                    ]
+                },
                 har: {
                     input: {
-                        resources: [getObj('http://domain0.com'),
-                            getObj('http://domain1.com'), getObj(
-                                'http://domain2.com'), getObj(
-                                'http://domain1.com')
+                        resources: [
+                            getObj('http://domain0.com'),
+                            getObj('http://domain1.com'),
+                            getObj('http://domain2.com'),
+                            getObj('http://domain1.com')
                         ],
                         startTime: null,
                         endTime: null
@@ -97,16 +114,15 @@ describe('Security', function() {
             help.callPreprocessor('security', harvested, output,
                 function() {
                     assert.equals(called, 2);
-                    // console.log('outputData', outputData);
+                    console.log('outputData', outputData);
 
                     assert.isArray(outputData.domains);
                     assert.equals(outputData.domains.length,
-                        3);
+                        5);
 
                     assert.isObject(outputData.domainsResult);
                     assert.equals(Object.keys(outputData.domainsResult)
-                        .length, 3);
-
+                        .length, 5);
 
                     inputBody.split('\n').forEach(function(val, i) {
                         assert.equals(outputData.domainsResult[

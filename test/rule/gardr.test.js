@@ -190,6 +190,9 @@ describe('Gardr validator', function () {
                 }
             },
             'actions': {
+                navigations: [],
+                illegalNavigations: [],
+                windowOpened: []
             }
         };
 
@@ -204,7 +207,7 @@ describe('Gardr validator', function () {
     });
 
     function getValid(clickHandler, noWindowOpen) {
-        var windowOpened = (noWindowOpen ? null : [
+        var windowOpened = (noWindowOpen ? [] : [
              {
               'target': typeof noWindowOpen === 'string' ? noWindowOpen : 'new_window',
               'time': 1410339022195,
@@ -254,6 +257,8 @@ describe('Gardr validator', function () {
                 }
             },
             actions: {
+                navigations: [],
+                illegalNavigations: [],
                 windowOpened: windowOpened
             }
         };
