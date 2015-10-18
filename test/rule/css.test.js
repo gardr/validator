@@ -46,7 +46,7 @@ describe('CSS instrumentation', function () {
 
 var help = require('../lib/validateHelpers.js');
 
-describe.only('CSS validator', function(){
+describe('CSS validator', function(){
 
     it('should allow @font-face', function(done){
         var harvest = {
