@@ -309,13 +309,13 @@ describe('Runner full tests', function() {
         });
     });
 
-    [/*{
+    [{
         name: '1',
         errors: 2
-    }, {
+    },{
         name: '2',
-        errors: 1
-    },*/ {
+        errors: 3
+    }, {
         name: '3',
         errors: 0
     }].forEach(function(o){
@@ -346,6 +346,8 @@ describe('Runner full tests', function() {
                 ],
                 'validate': [
                     'cookies',
+                    'gsap',
+                    'jquery',
                     'common',
                     'log'
                 ],
@@ -364,23 +366,25 @@ describe('Runner full tests', function() {
                     assert.equals(report.error.length, o.errors,
                         'should have ' + o.errors + ' errors: ' + JSON.stringify(report.error, null, 4));
                     report.error.forEach(function(errorEntry) {
-                        assert.equals(errorEntry.validatorName, 'log');
+                        assert(errorEntry.validatorName == 'log' ||
+                            errorEntry.validatorName == 'gsap' ||
+                            errorEntry.validatorName == 'jquery');
                     });
 
                     result.har.failingUrls.forEach(function(entry) {
                         assert.equals(entry, null, 'should not have failing url:'+ entry.url);
                     });
 
-                    console.log(report);
-                    console.log('result.cookies', result.cookies);
+                    //console.log(report);
+                    //console.log('result.cookies', result.cookies);
                     //console.log(result.actions);
                     //console.log(result.gardr);
 
-                    console.log('!-------');
-                    console.log(result.log.userLogs.map(function(a){
-                        return a.message.replace('!internal ', '');
-                    }).join('\n'));
-                    console.log('-------|');
+                    // console.log('!-------');
+                    // console.log(result.log.userLogs.map(function(a){
+                    //     return a.message.replace('!internal ', '');
+                    // }).join('\n'));
+                    // console.log('-------|');
 
                     if (result.common.errors && result.common.errors.length > 0) {
                         console.error('errors:', result.common.errors);

@@ -41,6 +41,7 @@ module.exports = {
         'css' ,
         'timers',
         'jquery',
+        'gsap',
         'gardr',
         'cookies',
         'sizes',
