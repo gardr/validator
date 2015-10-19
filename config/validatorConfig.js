@@ -33,8 +33,11 @@ module.exports = {
         // takes input from viewportOptions
         iframeNotAllowed: true,
         enforceStyling: true,
-        //enforceSpec: true, <- old 
+        //enforceSpec: true, <- old deprecated
         illegalTags: ['meta[name=\"viewport\"]']
+    },
+    gsap: {
+        versionsBack: 1
     },
     jquery: {
         versionsBack: 1,
@@ -66,7 +69,8 @@ module.exports = {
         giveExtraThreshold: {
             jQuery: true,
             jQueryThreshold: 33369,
-            AdForm: true
+            AdForm: true,
+            GSAP: true
         },
         minimumPayloadSize: 100,
         maxRequests: {
