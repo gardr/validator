@@ -26,6 +26,9 @@ module.exports = {
     errors: {
         //allowedErrors: 0
     },
+    adops: {
+        flatZIP: false
+    },
     gardr: {
         // takes input from viewportOptions
         iframeNotAllowed: true,
