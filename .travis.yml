@@ -1,6 +1,6 @@
 language: node_js
 node_js:
-  - "4.2.x"
+  - "4"
 env:
   - PHANTOM_JS_BIN_PATH="phantomjs"
 script: make test-coveralls
