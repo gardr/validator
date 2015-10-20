@@ -24,7 +24,7 @@ describe('spawn', function () {
         var input = {pageUrl: 'about:blank', spec: {a: 'a'}};
         this.spawn(input, function( argMock){
             refute.equals(input, argMock);
-            assert.equals(JSON.stringify(input), argMock.args[1]);
+            assert.equals(JSON.stringify(input), argMock.args[2]);
             done();
         });
     });
