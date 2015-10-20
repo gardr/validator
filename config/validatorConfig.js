@@ -59,6 +59,7 @@ module.exports = {
         apiKey: process.env['GOOG_SAFE_BROWSE_API_KEY']
     },
     har: {
+        forceSecureUrls: true,
         checkTls: true,
         errorOnTls: true
     },
