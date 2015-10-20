@@ -114,7 +114,6 @@ describe('Security', function() {
             help.callPreprocessor('security', harvested, output,
                 function() {
                     assert.equals(called, 2);
-                    console.log('outputData', outputData);
 
                     assert.isArray(outputData.domains);
                     assert.equals(outputData.domains.length,
