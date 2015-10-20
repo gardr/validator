@@ -17,6 +17,9 @@
     "type": "git",
     "url": "https://github.com/gardr/validator"
   },
+  "optionalDependencies": {
+      "phantomjs2": "palmerj3/phantomjs2"
+  },
   "dependencies": {
     "async": "^0.9.0",
     "browserify": "^4.1.11",
