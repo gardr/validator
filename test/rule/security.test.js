@@ -22,14 +22,31 @@ describe('Security', function() {
 
     beforeEach(function() {
         // remove mockery warnings:
-        ['safe-browse', './lib/safe_browse', '../../safeURL.js',
-            'underscore', 'http', 'url', 'util',
+        [
+            'safe-browse',
+            './lib/safe_browse',
+            '../../safeURL.js',
+            'underscore',
+            'http',
+            'https',
+            'node-ssllabs',
+            './lib/ssllabs',
+            'url',
+            'util',
             'querystring', 'events', '../../lib/safeURL.js',
             '../../lib/rule/preprocess/security.js'
         ].forEach(function(v) {
             mockery.registerAllowable(v);
         });
         mockery.registerMock('request', requestMock);
+        // mockery.registerMock('node-ssllabs', {
+        //     scan: function scanMock(domain, cb){
+        //         cb(new Error('Test mock Not implemented'))
+        //
+        //
+        //
+        //     }
+        // });
         mockery.enable({
             useCleanCache: true
         });
@@ -57,6 +74,58 @@ describe('Security', function() {
 
     describe('preprocessor', function() {
 
+        it.only('should collect 1 domain', function(done) {
+
+
+            function getObj(url) {
+                return {
+                    request: {
+                        url: url
+                    }
+                };
+            }
+
+            function getNavObj(url) {
+                return {
+                    url: url
+                };
+            }
+
+            var harvested = {
+                actions: {
+                    navigations: [],
+                    illegalNavigations: []
+                },
+                har: {
+                    input: {
+                        resources: [
+                            getObj('https://www.vg.no')
+                        ],
+                        startTime: null,
+                        endTime: null
+                    }
+                }
+            };
+
+            var called = 0;
+            var outputData = {};
+            var output = function(key, value) {
+                called++;
+
+                outputData[key] = value;
+            };
+
+            var inputBody = resPayload.body =
+                'malware\nok\nmalware';
+
+            help.callPreprocessor('security', harvested, output,
+                function() {
+                    console.log('outputData', outputData);
+
+                    done();
+                });
+
+        });
 
         it('should collect domains', function(done) {
 
