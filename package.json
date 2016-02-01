@@ -17,9 +17,6 @@
     "type": "git",
     "url": "https://github.com/gardr/validator"
   },
-  "optionalDependencies": {
-      "phantomjs2": "palmerj3/phantomjs2"
-  },
   "dependencies": {
     "async": "^0.9.0",
     "browserify": "^4.1.11",
@@ -36,7 +33,7 @@
     "lodash": "^2.4.1",
     "mock-phantom-touch-events": "0.0.3",
     "moment": "^2.7.0",
-    "phantomjs": "^1.9.7-9",
+    "phantomjs": "^2.1.3",
     "request": "2.36.0",
     "safe-browse": "sveisvei/node-safe-browse"
   },
